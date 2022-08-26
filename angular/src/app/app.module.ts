@@ -38,6 +38,22 @@ import { SidebarComponent } from './layout/sidebar.component';
 import { SidebarLogoComponent } from './layout/sidebar-logo.component';
 import { SidebarUserPanelComponent } from './layout/sidebar-user-panel.component';
 import { SidebarMenuComponent } from './layout/sidebar-menu.component';
+import { StudentComponent } from './student/student.component';
+import { TripComponent } from './trip/trip.component';
+import { StaffComponent } from './staff/staff.component';
+import { BusComponent } from './bus/bus.component';
+import { BoardingComponent } from './boarding/boarding.component';
+import { CreateStudentComponent } from './student/create-student/create-student.component';
+import { EditStudentComponent } from './student/edit-student/edit-student.component';
+import { CreateBoardingComponent } from './boarding/create-boarding/create-boarding.component';
+import { EditBoardingComponent } from './boarding/edit-boarding/edit-boarding.component';
+import { CreateBusComponent } from './bus/create-bus/create-bus.component';
+import { EditBusComponent } from './bus/edit-bus/edit-bus.component';
+import { EditStaffComponent } from './staff/edit-staff/edit-staff.component';
+import { CreateStaffComponent } from './staff/create-staff/create-staff.component';
+import { CreateTripComponent } from './trip/create-trip/create-trip.component';
+import { EditTripComponent } from './trip/edit-trip/edit-trip.component';
+import { LocationComponent } from './location/location.component';
 
 @NgModule({
   declarations: [
@@ -67,7 +83,23 @@ import { SidebarMenuComponent } from './layout/sidebar-menu.component';
     SidebarComponent,
     SidebarLogoComponent,
     SidebarUserPanelComponent,
-    SidebarMenuComponent
+    SidebarMenuComponent,
+    StudentComponent,
+    TripComponent,
+    StaffComponent,
+    BusComponent,
+    BoardingComponent,
+    CreateStudentComponent,
+    EditStudentComponent,
+    CreateBoardingComponent,
+    EditBoardingComponent,
+    CreateBusComponent,
+    EditBusComponent,
+    EditStaffComponent,
+    CreateStaffComponent,
+    CreateTripComponent,
+    EditTripComponent,
+    LocationComponent
   ],
   imports: [
     CommonModule,
