@@ -1,0 +1,67 @@
+<form
+  class="form-horizontal"
+  autocomplete="off"
+  #createRoleForm="ngForm"
+  (ngSubmit)="save()"
+>
+  <abp-modal-header
+    [title]="'Edit Existing Bus' | localize"
+    (onCloseClick)="bsModalRef.hide()"
+  ></abp-modal-header>
+  <div class="modal-body">
+
+    <div class="form-group row required">
+        <label class="col-md-3 col-form-label" for="registrationNumber">
+          {{ "Registration Number" | localize }}
+        </label>
+        <div class="col-md-9">
+          <input
+            type="text"
+            class="form-control"
+            name="registrationNumber"
+            id="registrationNumber"
+            required
+            minlength="2"
+            maxlength="32"
+            [(ngModel)]="bus.registrationNumber"
+            #registrationNumberModel="ngModel"
+            #registrationNumberEl
+          />
+          <abp-validation-summary
+            [control]="registrationNumberModel"
+            [controlEl]="registrationNumberEl"
+          ></abp-validation-summary>
+        </div>
+      </div>
+
+      <div class="form-group row required">
+        <label class="col-md-3 col-form-label" for="initialMillage">
+          {{ "Initial Millage" | localize }}
+        </label>
+        <div class="col-md-9">
+          <input
+            type="number"
+            class="form-control"
+            name="initialMillage"
+            id="initialMillage"
+            required
+            minlength="2"
+            maxlength="32"
+            [(ngModel)]="bus.initialMillage"
+            #initialMillageModel="ngModel"
+            #initialMillageEl
+          />
+          <abp-validation-summary
+            [control]="initialMillageModel"
+            [controlEl]="initialMillageEl"
+          ></abp-validation-summary>
+        </div>
+      </div>
+  </div>
+
+  <abp-modal-footer
+    [cancelDisabled]="saving"
+    [saveDisabled]="!createRoleForm.form.valid || saving"
+    (onCancelClick)="bsModalRef.hide()"
+  ></abp-modal-footer>
+</form>

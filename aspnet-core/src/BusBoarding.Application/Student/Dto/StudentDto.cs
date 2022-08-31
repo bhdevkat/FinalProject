@@ -12,9 +12,7 @@ namespace BusBoardingSystem.StudentAS.Dto
 {
     [AutoMap(typeof(Student))]
     public class StudentDto : EntityDto<int>
-    {       
-        public int Id { get; set; }
-
+    { 
         public int TenantId { get; set; }
 
         public int PersonId { get; set; }
@@ -22,5 +20,10 @@ namespace BusBoardingSystem.StudentAS.Dto
         public string StudentNumber { get; set; }
 
         public PersonDto Person { get; set; }
+
+        public StudentDto()
+        {
+            Person = new PersonDto();
+        }
     }
 }

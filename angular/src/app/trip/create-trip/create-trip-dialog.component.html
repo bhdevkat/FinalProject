@@ -1,0 +1,68 @@
+<form
+  class="form-horizontal"
+  autocomplete="off"
+  #createRoleForm="ngForm"
+  (ngSubmit)="save()"
+>
+  <abp-modal-header
+    [title]="'Add New Trip' | localize"
+    (onCloseClick)="bsModalRef.hide()"
+  ></abp-modal-header>
+  <div class="modal-body">
+
+    <div class="form-group row required">
+        <label class="col-md-3 col-form-label" for="departureTime">
+          {{ "Departure Time" | localize }}
+        </label>
+        <div class="col-md-9">
+          <input
+            type="text"
+            class="form-control"
+            name="departureTime"
+            id="departureTime"
+            required
+            minlength="2"
+            maxlength="32"
+            [(ngModel)]="trip.departureTime"
+            #departureTimeModel="ngModel"
+            #departureTimeEl
+          />
+          <abp-validation-summary
+            [control]="departureTimeModel"
+            [controlEl]="departureTimeEl"
+          ></abp-validation-summary>
+        </div>
+      </div>
+
+      <div class="form-group row required">
+        <label class="col-md-3 col-form-label" for="arrivalTime">
+          {{ "Arrival Time" | localize }}
+        </label>
+        <div class="col-md-9">
+          <input
+            type="text"
+            class="form-control"
+            name="arrivalTime"
+            id="arrivalTime"
+            required
+            minlength="2"
+            maxlength="32"
+            [(ngModel)]="trip.arrivalTime"
+            #arrivalTimeModel="ngModel"
+            #arrivalTimeEl
+          />
+          <abp-validation-summary
+            [control]="arrivalTimeModel"
+            [controlEl]="arrivalTimeEl"
+          ></abp-validation-summary>
+        </div>
+      </div>
+      
+  </div>
+
+  <abp-modal-footer
+    [cancelDisabled]="saving"
+    [saveDisabled]="!createRoleForm.form.valid || saving"
+    (onCancelClick)="bsModalRef.hide()"
+  ></abp-modal-footer>
+</form>

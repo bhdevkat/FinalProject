@@ -29,79 +29,61 @@ namespace BusBoardingSystem.StaffAS
 
         public async override Task<StaffDto> CreateAsync(CreateStaffDto input)
         {
-            // Create client
+            // Create person
             var person = ObjectMapper.Map<Person>(input.Person);
-                        
             await _personRepository.InsertAsync(person);
-            await CurrentUnitOfWork.SaveChangesAsync(); // To get new clients's id.
 
-            // We are working entities of new tenant, so changing tenant filter
-            using (CurrentUnitOfWork.SetTenantId(person.TenantId))
-            {
-                // Add staff for the newly created tenant               
-                var staff = ObjectMapper.Map<Staff>(input);
-                staff.PersonId = person.Id;
+            // To get new clients's id.
+            await CurrentUnitOfWork.SaveChangesAsync();
 
-                await Repository.InsertAsync(staff); 
-                await CurrentUnitOfWork.SaveChangesAsync();
-
-                var staffDto = MapToEntityDto(staff);
-                staffDto.Person = person;
-
-                return staffDto;
-            }
+            //Create student with person data
+            input.PersonId = person.Id;
+            return await base.CreateAsync(input);
         }
 
         public async override Task<PagedResultDto<StaffDto>> GetAllAsync(PagedStaffResultRequestDto input)
         {
-            List<Staff> staff = await Repository.GetAllListAsync();
+            List<Staff> students = await Repository.GetAllListAsync();
             List<Person> people = await _personRepository.GetAllListAsync();
 
-            List<StaffDto> staffDto = new List<StaffDto>();
+            List<StaffDto> studentDto = new List<StaffDto>();
 
-            foreach (var member in staff)
+            foreach (var student in students)
             {
-                StaffDto newStaff = ObjectMapper.Map<StaffDto>(member);
-                newStaff.Person = people.SingleOrDefault(x => x.Id == newStaff.PersonId);
-                staffDto.Add(newStaff);
+                StaffDto newStudent = ObjectMapper.Map<StaffDto>(student);
+                newStudent.Person = ObjectMapper.Map<PersonDto>(people.SingleOrDefault(x => x.Id == newStudent.PersonId));
+                studentDto.Add(newStudent);
             }
 
-            return Common.GetPagedResult<StaffDto>(staffDto);
+            //var studentDto2 = students.Join(people, x => x.PersonId, a => a.Id, (x, a) => new Object());
+
+            return Common.GetPagedResult<StaffDto>(studentDto);
         }
 
         public async override Task<StaffDto> GetAsync(EntityDto<int> input)
         {
-            Staff staff = await Repository.GetAsync(input.Id);
+            var studentDto = ObjectMapper.Map<StaffDto>(await Repository.GetAsync(input.Id));
+            studentDto.Person = ObjectMapper.Map<PersonDto>(await _personRepository.GetAsync(studentDto.PersonId));
 
-            Person people = await _personRepository
-                .GetAsync(staff.PersonId);
-
-            StaffDto staffDto = ObjectMapper.Map<StaffDto>(staff);
-            staffDto.Person = people;
-
-            return staffDto;
+            return studentDto;
         }
 
 
         public async override Task<StaffDto> UpdateAsync(StaffDto input)
         {
-            Person person = await _personRepository.UpdateAsync(input.Person);
+            var students = await base.UpdateAsync(input);
 
-            var StaffDto = await base.UpdateAsync(input);
-            StaffDto.Person = person;
+            var sa = ObjectMapper.Map<Person>(input.Person);
 
-            return StaffDto;
+            students.Person = ObjectMapper.Map<PersonDto>(await _personRepository.UpdateAsync(sa));
+
+            return students;
         }
 
         public async override Task DeleteAsync(EntityDto<int> input)
         {
-            Staff staff = await Repository.GetAsync(input.Id);
-
-            Person people = await _personRepository
-                .FirstOrDefaultAsync(x => x.Id == staff.PersonId);
-
-            await _personRepository.DeleteAsync(people);
-            await base.DeleteAsync(input);;
+            await base.DeleteAsync(input);
+            await _personRepository.DeleteAsync(await _personRepository.GetAsync(input.Id));
         }
     }
 }

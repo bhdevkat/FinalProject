@@ -1,0 +1,21 @@
+<form
+  class="form-horizontal"
+  autocomplete="off"
+  #createRoleForm="ngForm"
+  (ngSubmit)="save()"
+>
+  <abp-modal-header
+    [title]="'Edit Existing Boarding' | localize"
+    (onCloseClick)="bsModalRef.hide()"
+  ></abp-modal-header>
+  <div class="modal-body">
+
+
+  </div>
+
+  <abp-modal-footer
+    [cancelDisabled]="saving"
+    [saveDisabled]="!createRoleForm.form.valid || saving"
+    (onCancelClick)="bsModalRef.hide()"
+  ></abp-modal-footer>
+</form>

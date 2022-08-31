@@ -1786,6 +1786,9 @@ namespace BusBoarding.Migrations
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Firstname")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("IdNumber")
                         .HasColumnType("nvarchar(max)");
 
@@ -1797,9 +1800,6 @@ namespace BusBoarding.Migrations
 
                     b.Property<long?>("LastModifierUserId")
                         .HasColumnType("bigint");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Surname")
                         .HasColumnType("nvarchar(max)");

@@ -12,6 +12,8 @@ namespace BusBoardingSystem.BoardingAS.Dto
     [AutoMapFrom(typeof(Boarding))]
     public class CreateBoardingDto : EntityDto<int>
     {
+        public int PersonId { get; set; }
 
+        public int ScheduleId { get; set; }
     }
 }

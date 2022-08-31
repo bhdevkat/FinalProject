@@ -13,6 +13,8 @@ import { ChangePasswordComponent } from './users/change-password/change-password
 import { StudentComponent } from './student/student.component';
 import { StaffComponent } from './staff/staff.component';
 import { TripComponent } from './trip/trip.component';
+import { LocationComponent } from './location/location.component';
+//import { ScheduleComponent } from './schedule/schedule.component';
 
 @NgModule({
     imports: [
@@ -32,6 +34,8 @@ import { TripComponent } from './trip/trip.component';
                     { path: 'boarding', component: BoardingComponent },
                     { path: 'staff', component: StaffComponent },
                     { path: 'trip', component: TripComponent },
+                    { path: 'location', component: LocationComponent },
+                    //{ path: 'schedule', component: ScheduleComponent },
                 ]
             }
         ])

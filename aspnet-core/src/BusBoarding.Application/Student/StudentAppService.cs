@@ -18,12 +18,10 @@ namespace BusBoardingSystem.StudentAS
     [AbpAuthorize(PermissionNames.Pages_People)]
     public class StudentAppService : AsyncCrudAppService<Student, StudentDto, int, PagedStudentResultRequestDto, CreateStudentDto, StudentDto>, IStudentAppService
     {
-        private readonly IRepository<Student,int> _repository;
         private readonly IRepository<Person> _personRepository;
         public StudentAppService(IRepository<Student, int> repository,
                                  IRepository<Person> personRepository) : base(repository)
         {
-            _repository = repository;
             _personRepository = personRepository;
         }
 
@@ -31,7 +29,7 @@ namespace BusBoardingSystem.StudentAS
         {
             // Create person
             var person = ObjectMapper.Map<Person>(input.Person);           
-            var test = await _personRepository.InsertAsync(person);
+            await _personRepository.InsertAsync(person);
 
             // To get new clients's id.
             await CurrentUnitOfWork.SaveChangesAsync(); 
@@ -43,27 +41,15 @@ namespace BusBoardingSystem.StudentAS
 
         public async override Task<StudentDto> GetAsync(EntityDto<int> input)
         {
+            var studentDto = ObjectMapper.Map<StudentDto>(await Repository.GetAsync(input.Id));
+            studentDto.Person = ObjectMapper.Map<PersonDto>(await _personRepository.GetAsync(studentDto.PersonId));
 
-            try
-            {
-                var studentDto = ObjectMapper.Map<StudentDto>(await _repository.GetAsync(input.Id));
-                studentDto.Person = ObjectMapper.Map<PersonDto>(await _personRepository.GetAsync(studentDto.PersonId));
-
-                return studentDto;
-
-
-            } catch (Exception ex)
-            {
-                var e = ex.Message;
-             }
-
-
-            return null;
+            return studentDto;
         }
 
         public async override Task<PagedResultDto<StudentDto>> GetAllAsync(PagedStudentResultRequestDto input)
         {
-            List<Student> students = await _repository.GetAllListAsync();
+            List<Student> students = await Repository.GetAllListAsync();
             List<Person> people = await _personRepository.GetAllListAsync();
 
             List<StudentDto> studentDto = new List<StudentDto>();

@@ -12,13 +12,17 @@ namespace BusBoardingSystem.PeopleAS.Dto
     {
         public PersonMappingProfile()
         {
-            CreateMap<PersonDto, Person>();
+            CreateMap<PersonDto, Person>()
+                 .ForMember(r => r.DateOfBirth, opt => opt.MapFrom(e => DateTime.Parse(e.DateOfBirth)));
 
-            CreateMap<Person, PersonDto>();
+            CreateMap<Person, PersonDto>()
+                .ForMember(r => r.DateOfBirth, opt => opt.MapFrom(e => e.DateOfBirth.ToString("yyyy-MM-dd")));
 
-            CreateMap<CreatePersonDto, Person>();
+            CreateMap<CreatePersonDto, Person>()
+                .ForMember(r => r.DateOfBirth, opt => opt.MapFrom(e => DateTime.Parse(e.DateOfBirth)));
 
-            CreateMap<CreatePersonDto, Person>();
+            CreateMap<Person, CreatePersonDto> ()
+                .ForMember(r => r.DateOfBirth, opt => opt.MapFrom(e => e.DateOfBirth.ToString("yyyy-MM-dd")));
         }
     }
 }

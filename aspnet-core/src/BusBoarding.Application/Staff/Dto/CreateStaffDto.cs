@@ -15,8 +15,15 @@ namespace BusBoardingSystem.StaffAS.Dto
     {
         public int TenantId { get; set; }
 
+        public int PersonId { get; set; }
+
         public string StaffNumber { get; set; }
 
         public virtual CreatePersonDto Person { get; set; }
+
+        public CreateStaffDto()
+        {
+            Person = new CreatePersonDto();
+        }
     }
 }

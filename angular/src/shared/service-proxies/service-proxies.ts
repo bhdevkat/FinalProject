@@ -801,6 +801,304 @@ export class ConfigurationServiceProxy {
 }
 
 @Injectable()
+export class LocationServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    get(id: number | undefined): Observable<LocationDto> {
+        let url_ = this.baseUrl + "/api/services/app/Location/Get?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<LocationDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<LocationDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<LocationDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = LocationDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<LocationDto>(<any>null);
+    }
+
+    /**
+     * @param keyword (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getAll(keyword: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<LocationDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/Location/GetAll?";
+        if (keyword === null)
+            throw new Error("The parameter 'keyword' cannot be null.");
+        else if (keyword !== undefined)
+            url_ += "Keyword=" + encodeURIComponent("" + keyword) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<LocationDtoPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<LocationDtoPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<LocationDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = LocationDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<LocationDtoPagedResultDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    create(body: CreateLocationDto | undefined): Observable<LocationDto> {
+        let url_ = this.baseUrl + "/api/services/app/Location/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<LocationDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<LocationDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<LocationDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = LocationDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<LocationDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    update(body: LocationDto | undefined): Observable<LocationDto> {
+        let url_ = this.baseUrl + "/api/services/app/Location/Update";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(<any>response_);
+                } catch (e) {
+                    return <Observable<LocationDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<LocationDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<LocationDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = LocationDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<LocationDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    delete(id: number | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Location/Delete?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable()
 export class V1ServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -1324,6 +1622,304 @@ export class RoleServiceProxy {
             }));
         }
         return _observableOf<RoleDtoPagedResultDto>(<any>null);
+    }
+}
+
+@Injectable()
+export class ScheduleServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    get(id: number | undefined): Observable<ScheduleDto> {
+        let url_ = this.baseUrl + "/api/services/app/Schedule/Get?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(<any>response_);
+                } catch (e) {
+                    return <Observable<ScheduleDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ScheduleDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<ScheduleDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ScheduleDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ScheduleDto>(<any>null);
+    }
+
+    /**
+     * @param keyword (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getAll(keyword: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<ScheduleDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/Schedule/GetAll?";
+        if (keyword === null)
+            throw new Error("The parameter 'keyword' cannot be null.");
+        else if (keyword !== undefined)
+            url_ += "Keyword=" + encodeURIComponent("" + keyword) + "&";
+        if (skipCount === null)
+            throw new Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(<any>response_);
+                } catch (e) {
+                    return <Observable<ScheduleDtoPagedResultDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ScheduleDtoPagedResultDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<ScheduleDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ScheduleDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ScheduleDtoPagedResultDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    create(body: CreateScheduleDto | undefined): Observable<ScheduleDto> {
+        let url_ = this.baseUrl + "/api/services/app/Schedule/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<ScheduleDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ScheduleDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<ScheduleDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ScheduleDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ScheduleDto>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    update(body: ScheduleDto | undefined): Observable<ScheduleDto> {
+        let url_ = this.baseUrl + "/api/services/app/Schedule/Update";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(<any>response_);
+                } catch (e) {
+                    return <Observable<ScheduleDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<ScheduleDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<ScheduleDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ScheduleDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ScheduleDto>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    delete(id: number | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Schedule/Delete?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
     }
 }
 
@@ -3562,6 +4158,14 @@ export interface IAuthenticateResultModel {
 
 export class BoardingDto implements IBoardingDto {
     id: number;
+    studentStaffNumber: string | undefined;
+    identity: string | undefined;
+    boardingType: string | undefined;
+    person: Person;
+    schedule: Schedule;
+    bus: Bus;
+    trip: Trip;
+    location: Location;
 
     constructor(data?: IBoardingDto) {
         if (data) {
@@ -3575,6 +4179,14 @@ export class BoardingDto implements IBoardingDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
+            this.studentStaffNumber = _data["studentStaffNumber"];
+            this.identity = _data["identity"];
+            this.boardingType = _data["boardingType"];
+            this.person = _data["person"] ? Person.fromJS(_data["person"]) : <any>undefined;
+            this.schedule = _data["schedule"] ? Schedule.fromJS(_data["schedule"]) : <any>undefined;
+            this.bus = _data["bus"] ? Bus.fromJS(_data["bus"]) : <any>undefined;
+            this.trip = _data["trip"] ? Trip.fromJS(_data["trip"]) : <any>undefined;
+            this.location = _data["location"] ? Location.fromJS(_data["location"]) : <any>undefined;
         }
     }
 
@@ -3588,6 +4200,14 @@ export class BoardingDto implements IBoardingDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["studentStaffNumber"] = this.studentStaffNumber;
+        data["identity"] = this.identity;
+        data["boardingType"] = this.boardingType;
+        data["person"] = this.person ? this.person.toJSON() : <any>undefined;
+        data["schedule"] = this.schedule ? this.schedule.toJSON() : <any>undefined;
+        data["bus"] = this.bus ? this.bus.toJSON() : <any>undefined;
+        data["trip"] = this.trip ? this.trip.toJSON() : <any>undefined;
+        data["location"] = this.location ? this.location.toJSON() : <any>undefined;
         return data; 
     }
 
@@ -3601,6 +4221,14 @@ export class BoardingDto implements IBoardingDto {
 
 export interface IBoardingDto {
     id: number;
+    studentStaffNumber: string | undefined;
+    identity: string | undefined;
+    boardingType: string | undefined;
+    person: Person;
+    schedule: Schedule;
+    bus: Bus;
+    trip: Trip;
+    location: Location;
 }
 
 export class BoardingDtoPagedResultDto implements IBoardingDtoPagedResultDto {
@@ -3658,8 +4286,93 @@ export interface IBoardingDtoPagedResultDto {
     totalCount: number;
 }
 
+export class Bus implements IBus {
+    id: number;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    lastModificationTime: moment.Moment | undefined;
+    lastModifierUserId: number | undefined;
+    isDeleted: boolean;
+    deleterUserId: number | undefined;
+    deletionTime: moment.Moment | undefined;
+    tenantId: number;
+    registrationNumber: string | undefined;
+    initialMillage: number;
+
+    constructor(data?: IBus) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
+            this.lastModificationTime = _data["lastModificationTime"] ? moment(_data["lastModificationTime"].toString()) : <any>undefined;
+            this.lastModifierUserId = _data["lastModifierUserId"];
+            this.isDeleted = _data["isDeleted"];
+            this.deleterUserId = _data["deleterUserId"];
+            this.deletionTime = _data["deletionTime"] ? moment(_data["deletionTime"].toString()) : <any>undefined;
+            this.tenantId = _data["tenantId"];
+            this.registrationNumber = _data["registrationNumber"];
+            this.initialMillage = _data["initialMillage"];
+        }
+    }
+
+    static fromJS(data: any): Bus {
+        data = typeof data === 'object' ? data : {};
+        let result = new Bus();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        data["lastModificationTime"] = this.lastModificationTime ? this.lastModificationTime.toISOString() : <any>undefined;
+        data["lastModifierUserId"] = this.lastModifierUserId;
+        data["isDeleted"] = this.isDeleted;
+        data["deleterUserId"] = this.deleterUserId;
+        data["deletionTime"] = this.deletionTime ? this.deletionTime.toISOString() : <any>undefined;
+        data["tenantId"] = this.tenantId;
+        data["registrationNumber"] = this.registrationNumber;
+        data["initialMillage"] = this.initialMillage;
+        return data; 
+    }
+
+    clone(): Bus {
+        const json = this.toJSON();
+        let result = new Bus();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IBus {
+    id: number;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    lastModificationTime: moment.Moment | undefined;
+    lastModifierUserId: number | undefined;
+    isDeleted: boolean;
+    deleterUserId: number | undefined;
+    deletionTime: moment.Moment | undefined;
+    tenantId: number;
+    registrationNumber: string | undefined;
+    initialMillage: number;
+}
+
 export class BusDto implements IBusDto {
     id: number;
+    registrationNumber: string | undefined;
+    initialMillage: number;
 
     constructor(data?: IBusDto) {
         if (data) {
@@ -3673,6 +4386,8 @@ export class BusDto implements IBusDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
+            this.registrationNumber = _data["registrationNumber"];
+            this.initialMillage = _data["initialMillage"];
         }
     }
 
@@ -3686,6 +4401,8 @@ export class BusDto implements IBusDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["registrationNumber"] = this.registrationNumber;
+        data["initialMillage"] = this.initialMillage;
         return data; 
     }
 
@@ -3699,6 +4416,8 @@ export class BusDto implements IBusDto {
 
 export interface IBusDto {
     id: number;
+    registrationNumber: string | undefined;
+    initialMillage: number;
 }
 
 export class BusDtoPagedResultDto implements IBusDtoPagedResultDto {
@@ -3891,6 +4610,8 @@ export interface IChangeUserLanguageDto {
 
 export class CreateBoardingDto implements ICreateBoardingDto {
     id: number;
+    personId: number;
+    scheduleId: number;
 
     constructor(data?: ICreateBoardingDto) {
         if (data) {
@@ -3904,6 +4625,8 @@ export class CreateBoardingDto implements ICreateBoardingDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
+            this.personId = _data["personId"];
+            this.scheduleId = _data["scheduleId"];
         }
     }
 
@@ -3917,6 +4640,8 @@ export class CreateBoardingDto implements ICreateBoardingDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["personId"] = this.personId;
+        data["scheduleId"] = this.scheduleId;
         return data; 
     }
 
@@ -3930,10 +4655,14 @@ export class CreateBoardingDto implements ICreateBoardingDto {
 
 export interface ICreateBoardingDto {
     id: number;
+    personId: number;
+    scheduleId: number;
 }
 
 export class CreateBusDto implements ICreateBusDto {
     id: number;
+    registrationNumber: string | undefined;
+    initialMillage: number;
 
     constructor(data?: ICreateBusDto) {
         if (data) {
@@ -3947,6 +4676,8 @@ export class CreateBusDto implements ICreateBusDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
+            this.registrationNumber = _data["registrationNumber"];
+            this.initialMillage = _data["initialMillage"];
         }
     }
 
@@ -3960,6 +4691,8 @@ export class CreateBusDto implements ICreateBusDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["registrationNumber"] = this.registrationNumber;
+        data["initialMillage"] = this.initialMillage;
         return data; 
     }
 
@@ -3973,14 +4706,75 @@ export class CreateBusDto implements ICreateBusDto {
 
 export interface ICreateBusDto {
     id: number;
+    registrationNumber: string | undefined;
+    initialMillage: number;
+}
+
+export class CreateLocationDto implements ICreateLocationDto {
+    id: number;
+    tenantId: number;
+    name: string | undefined;
+    longitude: string | undefined;
+    latitude: string | undefined;
+
+    constructor(data?: ICreateLocationDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.tenantId = _data["tenantId"];
+            this.name = _data["name"];
+            this.longitude = _data["longitude"];
+            this.latitude = _data["latitude"];
+        }
+    }
+
+    static fromJS(data: any): CreateLocationDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateLocationDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["tenantId"] = this.tenantId;
+        data["name"] = this.name;
+        data["longitude"] = this.longitude;
+        data["latitude"] = this.latitude;
+        return data; 
+    }
+
+    clone(): CreateLocationDto {
+        const json = this.toJSON();
+        let result = new CreateLocationDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateLocationDto {
+    id: number;
+    tenantId: number;
+    name: string | undefined;
+    longitude: string | undefined;
+    latitude: string | undefined;
 }
 
 export class CreatePersonDto implements ICreatePersonDto {
     id: number;
     tenantId: number;
-    name: string | undefined;
+    firstname: string | undefined;
     surname: string | undefined;
-    dateOfBirth: moment.Moment;
+    dateOfBirth: string | undefined;
     idNumber: string | undefined;
 
     constructor(data?: ICreatePersonDto) {
@@ -3996,9 +4790,9 @@ export class CreatePersonDto implements ICreatePersonDto {
         if (_data) {
             this.id = _data["id"];
             this.tenantId = _data["tenantId"];
-            this.name = _data["name"];
+            this.firstname = _data["firstname"];
             this.surname = _data["surname"];
-            this.dateOfBirth = _data["dateOfBirth"] ? moment(_data["dateOfBirth"].toString()) : <any>undefined;
+            this.dateOfBirth = _data["dateOfBirth"];
             this.idNumber = _data["idNumber"];
         }
     }
@@ -4014,9 +4808,9 @@ export class CreatePersonDto implements ICreatePersonDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["tenantId"] = this.tenantId;
-        data["name"] = this.name;
+        data["firstname"] = this.firstname;
         data["surname"] = this.surname;
-        data["dateOfBirth"] = this.dateOfBirth ? this.dateOfBirth.toISOString() : <any>undefined;
+        data["dateOfBirth"] = this.dateOfBirth;
         data["idNumber"] = this.idNumber;
         return data; 
     }
@@ -4032,9 +4826,9 @@ export class CreatePersonDto implements ICreatePersonDto {
 export interface ICreatePersonDto {
     id: number;
     tenantId: number;
-    name: string | undefined;
+    firstname: string | undefined;
     surname: string | undefined;
-    dateOfBirth: moment.Moment;
+    dateOfBirth: string | undefined;
     idNumber: string | undefined;
 }
 
@@ -4105,9 +4899,81 @@ export interface ICreateRoleDto {
     grantedPermissions: string[] | undefined;
 }
 
+export class CreateScheduleDto implements ICreateScheduleDto {
+    id: number;
+    tenantId: number;
+    busId: number;
+    assignedById: number;
+    driverId: number;
+    departureId: number;
+    destinationId: number;
+    expectedDepartureTime: string | undefined;
+
+    constructor(data?: ICreateScheduleDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.tenantId = _data["tenantId"];
+            this.busId = _data["busId"];
+            this.assignedById = _data["assignedById"];
+            this.driverId = _data["driverId"];
+            this.departureId = _data["departureId"];
+            this.destinationId = _data["destinationId"];
+            this.expectedDepartureTime = _data["expectedDepartureTime"];
+        }
+    }
+
+    static fromJS(data: any): CreateScheduleDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateScheduleDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["tenantId"] = this.tenantId;
+        data["busId"] = this.busId;
+        data["assignedById"] = this.assignedById;
+        data["driverId"] = this.driverId;
+        data["departureId"] = this.departureId;
+        data["destinationId"] = this.destinationId;
+        data["expectedDepartureTime"] = this.expectedDepartureTime;
+        return data; 
+    }
+
+    clone(): CreateScheduleDto {
+        const json = this.toJSON();
+        let result = new CreateScheduleDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateScheduleDto {
+    id: number;
+    tenantId: number;
+    busId: number;
+    assignedById: number;
+    driverId: number;
+    departureId: number;
+    destinationId: number;
+    expectedDepartureTime: string | undefined;
+}
+
 export class CreateStaffDto implements ICreateStaffDto {
     id: number;
     tenantId: number;
+    personId: number;
     staffNumber: string | undefined;
     person: CreatePersonDto;
 
@@ -4124,6 +4990,7 @@ export class CreateStaffDto implements ICreateStaffDto {
         if (_data) {
             this.id = _data["id"];
             this.tenantId = _data["tenantId"];
+            this.personId = _data["personId"];
             this.staffNumber = _data["staffNumber"];
             this.person = _data["person"] ? CreatePersonDto.fromJS(_data["person"]) : <any>undefined;
         }
@@ -4140,6 +5007,7 @@ export class CreateStaffDto implements ICreateStaffDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["tenantId"] = this.tenantId;
+        data["personId"] = this.personId;
         data["staffNumber"] = this.staffNumber;
         data["person"] = this.person ? this.person.toJSON() : <any>undefined;
         return data; 
@@ -4156,6 +5024,7 @@ export class CreateStaffDto implements ICreateStaffDto {
 export interface ICreateStaffDto {
     id: number;
     tenantId: number;
+    personId: number;
     staffNumber: string | undefined;
     person: CreatePersonDto;
 }
@@ -4280,6 +5149,10 @@ export interface ICreateTenantDto {
 
 export class CreateTripDto implements ICreateTripDto {
     id: number;
+    tenantId: number;
+    scheduleId: number;
+    departureTime: string | undefined;
+    arrivalTime: string | undefined;
 
     constructor(data?: ICreateTripDto) {
         if (data) {
@@ -4293,6 +5166,10 @@ export class CreateTripDto implements ICreateTripDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
+            this.tenantId = _data["tenantId"];
+            this.scheduleId = _data["scheduleId"];
+            this.departureTime = _data["departureTime"];
+            this.arrivalTime = _data["arrivalTime"];
         }
     }
 
@@ -4306,6 +5183,10 @@ export class CreateTripDto implements ICreateTripDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["tenantId"] = this.tenantId;
+        data["scheduleId"] = this.scheduleId;
+        data["departureTime"] = this.departureTime;
+        data["arrivalTime"] = this.arrivalTime;
         return data; 
     }
 
@@ -4319,6 +5200,10 @@ export class CreateTripDto implements ICreateTripDto {
 
 export interface ICreateTripDto {
     id: number;
+    tenantId: number;
+    scheduleId: number;
+    departureTime: string | undefined;
+    arrivalTime: string | undefined;
 }
 
 export class CreateUserDto implements ICreateUserDto {
@@ -4851,6 +5736,207 @@ export interface IIsTenantAvailableOutput {
     tenantId: number | undefined;
 }
 
+export class Location implements ILocation {
+    id: number;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    lastModificationTime: moment.Moment | undefined;
+    lastModifierUserId: number | undefined;
+    isDeleted: boolean;
+    deleterUserId: number | undefined;
+    deletionTime: moment.Moment | undefined;
+    tenantId: number;
+    name: string | undefined;
+    longitude: string | undefined;
+    latitude: string | undefined;
+
+    constructor(data?: ILocation) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
+            this.lastModificationTime = _data["lastModificationTime"] ? moment(_data["lastModificationTime"].toString()) : <any>undefined;
+            this.lastModifierUserId = _data["lastModifierUserId"];
+            this.isDeleted = _data["isDeleted"];
+            this.deleterUserId = _data["deleterUserId"];
+            this.deletionTime = _data["deletionTime"] ? moment(_data["deletionTime"].toString()) : <any>undefined;
+            this.tenantId = _data["tenantId"];
+            this.name = _data["name"];
+            this.longitude = _data["longitude"];
+            this.latitude = _data["latitude"];
+        }
+    }
+
+    static fromJS(data: any): Location {
+        data = typeof data === 'object' ? data : {};
+        let result = new Location();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        data["lastModificationTime"] = this.lastModificationTime ? this.lastModificationTime.toISOString() : <any>undefined;
+        data["lastModifierUserId"] = this.lastModifierUserId;
+        data["isDeleted"] = this.isDeleted;
+        data["deleterUserId"] = this.deleterUserId;
+        data["deletionTime"] = this.deletionTime ? this.deletionTime.toISOString() : <any>undefined;
+        data["tenantId"] = this.tenantId;
+        data["name"] = this.name;
+        data["longitude"] = this.longitude;
+        data["latitude"] = this.latitude;
+        return data; 
+    }
+
+    clone(): Location {
+        const json = this.toJSON();
+        let result = new Location();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ILocation {
+    id: number;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    lastModificationTime: moment.Moment | undefined;
+    lastModifierUserId: number | undefined;
+    isDeleted: boolean;
+    deleterUserId: number | undefined;
+    deletionTime: moment.Moment | undefined;
+    tenantId: number;
+    name: string | undefined;
+    longitude: string | undefined;
+    latitude: string | undefined;
+}
+
+export class LocationDto implements ILocationDto {
+    id: number;
+    tenantId: number;
+    name: string | undefined;
+    longitude: string | undefined;
+    latitude: string | undefined;
+
+    constructor(data?: ILocationDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.tenantId = _data["tenantId"];
+            this.name = _data["name"];
+            this.longitude = _data["longitude"];
+            this.latitude = _data["latitude"];
+        }
+    }
+
+    static fromJS(data: any): LocationDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new LocationDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["tenantId"] = this.tenantId;
+        data["name"] = this.name;
+        data["longitude"] = this.longitude;
+        data["latitude"] = this.latitude;
+        return data; 
+    }
+
+    clone(): LocationDto {
+        const json = this.toJSON();
+        let result = new LocationDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ILocationDto {
+    id: number;
+    tenantId: number;
+    name: string | undefined;
+    longitude: string | undefined;
+    latitude: string | undefined;
+}
+
+export class LocationDtoPagedResultDto implements ILocationDtoPagedResultDto {
+    items: LocationDto[] | undefined;
+    totalCount: number;
+
+    constructor(data?: ILocationDtoPagedResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items.push(LocationDto.fromJS(item));
+            }
+            this.totalCount = _data["totalCount"];
+        }
+    }
+
+    static fromJS(data: any): LocationDtoPagedResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new LocationDtoPagedResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["totalCount"] = this.totalCount;
+        return data; 
+    }
+
+    clone(): LocationDtoPagedResultDto {
+        const json = this.toJSON();
+        let result = new LocationDtoPagedResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ILocationDtoPagedResultDto {
+    items: LocationDto[] | undefined;
+    totalCount: number;
+}
+
 export class PermissionDto implements IPermissionDto {
     id: number;
     name: string | undefined;
@@ -4967,7 +6053,7 @@ export class Person implements IPerson {
     deleterUserId: number | undefined;
     deletionTime: moment.Moment | undefined;
     tenantId: number;
-    name: string | undefined;
+    firstname: string | undefined;
     surname: string | undefined;
     dateOfBirth: moment.Moment;
     idNumber: string | undefined;
@@ -4992,7 +6078,7 @@ export class Person implements IPerson {
             this.deleterUserId = _data["deleterUserId"];
             this.deletionTime = _data["deletionTime"] ? moment(_data["deletionTime"].toString()) : <any>undefined;
             this.tenantId = _data["tenantId"];
-            this.name = _data["name"];
+            this.firstname = _data["firstname"];
             this.surname = _data["surname"];
             this.dateOfBirth = _data["dateOfBirth"] ? moment(_data["dateOfBirth"].toString()) : <any>undefined;
             this.idNumber = _data["idNumber"];
@@ -5017,7 +6103,7 @@ export class Person implements IPerson {
         data["deleterUserId"] = this.deleterUserId;
         data["deletionTime"] = this.deletionTime ? this.deletionTime.toISOString() : <any>undefined;
         data["tenantId"] = this.tenantId;
-        data["name"] = this.name;
+        data["firstname"] = this.firstname;
         data["surname"] = this.surname;
         data["dateOfBirth"] = this.dateOfBirth ? this.dateOfBirth.toISOString() : <any>undefined;
         data["idNumber"] = this.idNumber;
@@ -5042,7 +6128,7 @@ export interface IPerson {
     deleterUserId: number | undefined;
     deletionTime: moment.Moment | undefined;
     tenantId: number;
-    name: string | undefined;
+    firstname: string | undefined;
     surname: string | undefined;
     dateOfBirth: moment.Moment;
     idNumber: string | undefined;
@@ -5051,9 +6137,9 @@ export interface IPerson {
 export class PersonDto implements IPersonDto {
     id: number;
     tenantId: number;
-    name: string | undefined;
+    firstname: string | undefined;
     surname: string | undefined;
-    dateOfBirth: moment.Moment;
+    dateOfBirth: string | undefined;
     idNumber: string | undefined;
 
     constructor(data?: IPersonDto) {
@@ -5069,9 +6155,9 @@ export class PersonDto implements IPersonDto {
         if (_data) {
             this.id = _data["id"];
             this.tenantId = _data["tenantId"];
-            this.name = _data["name"];
+            this.firstname = _data["firstname"];
             this.surname = _data["surname"];
-            this.dateOfBirth = _data["dateOfBirth"] ? moment(_data["dateOfBirth"].toString()) : <any>undefined;
+            this.dateOfBirth = _data["dateOfBirth"];
             this.idNumber = _data["idNumber"];
         }
     }
@@ -5087,9 +6173,9 @@ export class PersonDto implements IPersonDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["tenantId"] = this.tenantId;
-        data["name"] = this.name;
+        data["firstname"] = this.firstname;
         data["surname"] = this.surname;
-        data["dateOfBirth"] = this.dateOfBirth ? this.dateOfBirth.toISOString() : <any>undefined;
+        data["dateOfBirth"] = this.dateOfBirth;
         data["idNumber"] = this.idNumber;
         return data; 
     }
@@ -5105,9 +6191,9 @@ export class PersonDto implements IPersonDto {
 export interface IPersonDto {
     id: number;
     tenantId: number;
-    name: string | undefined;
+    firstname: string | undefined;
     surname: string | undefined;
-    dateOfBirth: moment.Moment;
+    dateOfBirth: string | undefined;
     idNumber: string | undefined;
 }
 
@@ -5618,12 +6704,257 @@ export interface IRoleListDtoListResultDto {
     items: RoleListDto[] | undefined;
 }
 
+export class Schedule implements ISchedule {
+    id: number;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    lastModificationTime: moment.Moment | undefined;
+    lastModifierUserId: number | undefined;
+    isDeleted: boolean;
+    deleterUserId: number | undefined;
+    deletionTime: moment.Moment | undefined;
+    tenantId: number;
+    busId: number;
+    assignedById: number;
+    driverId: number;
+    departureId: number;
+    destinationId: number;
+    expectedDepartureTime: string | undefined;
+
+    constructor(data?: ISchedule) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
+            this.lastModificationTime = _data["lastModificationTime"] ? moment(_data["lastModificationTime"].toString()) : <any>undefined;
+            this.lastModifierUserId = _data["lastModifierUserId"];
+            this.isDeleted = _data["isDeleted"];
+            this.deleterUserId = _data["deleterUserId"];
+            this.deletionTime = _data["deletionTime"] ? moment(_data["deletionTime"].toString()) : <any>undefined;
+            this.tenantId = _data["tenantId"];
+            this.busId = _data["busId"];
+            this.assignedById = _data["assignedById"];
+            this.driverId = _data["driverId"];
+            this.departureId = _data["departureId"];
+            this.destinationId = _data["destinationId"];
+            this.expectedDepartureTime = _data["expectedDepartureTime"];
+        }
+    }
+
+    static fromJS(data: any): Schedule {
+        data = typeof data === 'object' ? data : {};
+        let result = new Schedule();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        data["lastModificationTime"] = this.lastModificationTime ? this.lastModificationTime.toISOString() : <any>undefined;
+        data["lastModifierUserId"] = this.lastModifierUserId;
+        data["isDeleted"] = this.isDeleted;
+        data["deleterUserId"] = this.deleterUserId;
+        data["deletionTime"] = this.deletionTime ? this.deletionTime.toISOString() : <any>undefined;
+        data["tenantId"] = this.tenantId;
+        data["busId"] = this.busId;
+        data["assignedById"] = this.assignedById;
+        data["driverId"] = this.driverId;
+        data["departureId"] = this.departureId;
+        data["destinationId"] = this.destinationId;
+        data["expectedDepartureTime"] = this.expectedDepartureTime;
+        return data; 
+    }
+
+    clone(): Schedule {
+        const json = this.toJSON();
+        let result = new Schedule();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ISchedule {
+    id: number;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    lastModificationTime: moment.Moment | undefined;
+    lastModifierUserId: number | undefined;
+    isDeleted: boolean;
+    deleterUserId: number | undefined;
+    deletionTime: moment.Moment | undefined;
+    tenantId: number;
+    busId: number;
+    assignedById: number;
+    driverId: number;
+    departureId: number;
+    destinationId: number;
+    expectedDepartureTime: string | undefined;
+}
+
+export class ScheduleDto implements IScheduleDto {
+    id: number;
+    tenantId: number;
+    busId: number;
+    assignedById: number;
+    driverId: number;
+    departureId: number;
+    destinationId: number;
+    busReg: number;
+    assignedByName: number;
+    driverName: number;
+    departureName: number;
+    destinationName: number;
+    expectedDepartureTime: string | undefined;
+
+    constructor(data?: IScheduleDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.tenantId = _data["tenantId"];
+            this.busId = _data["busId"];
+            this.assignedById = _data["assignedById"];
+            this.driverId = _data["driverId"];
+            this.departureId = _data["departureId"];
+            this.destinationId = _data["destinationId"];
+            this.busReg = _data["busReg"];
+            this.assignedByName = _data["assignedByName"];
+            this.driverName = _data["driverName"];
+            this.departureName = _data["departureName"];
+            this.destinationName = _data["destinationName"];
+            this.expectedDepartureTime = _data["expectedDepartureTime"];
+        }
+    }
+
+    static fromJS(data: any): ScheduleDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ScheduleDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["tenantId"] = this.tenantId;
+        data["busId"] = this.busId;
+        data["assignedById"] = this.assignedById;
+        data["driverId"] = this.driverId;
+        data["departureId"] = this.departureId;
+        data["destinationId"] = this.destinationId;
+        data["busReg"] = this.busReg;
+        data["assignedByName"] = this.assignedByName;
+        data["driverName"] = this.driverName;
+        data["departureName"] = this.departureName;
+        data["destinationName"] = this.destinationName;
+        data["expectedDepartureTime"] = this.expectedDepartureTime;
+        return data; 
+    }
+
+    clone(): ScheduleDto {
+        const json = this.toJSON();
+        let result = new ScheduleDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IScheduleDto {
+    id: number;
+    tenantId: number;
+    busId: number;
+    assignedById: number;
+    driverId: number;
+    departureId: number;
+    destinationId: number;
+    busReg: number;
+    assignedByName: number;
+    driverName: number;
+    departureName: number;
+    destinationName: number;
+    expectedDepartureTime: string | undefined;
+}
+
+export class ScheduleDtoPagedResultDto implements IScheduleDtoPagedResultDto {
+    items: ScheduleDto[] | undefined;
+    totalCount: number;
+
+    constructor(data?: IScheduleDtoPagedResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items.push(ScheduleDto.fromJS(item));
+            }
+            this.totalCount = _data["totalCount"];
+        }
+    }
+
+    static fromJS(data: any): ScheduleDtoPagedResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ScheduleDtoPagedResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["totalCount"] = this.totalCount;
+        return data; 
+    }
+
+    clone(): ScheduleDtoPagedResultDto {
+        const json = this.toJSON();
+        let result = new ScheduleDtoPagedResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IScheduleDtoPagedResultDto {
+    items: ScheduleDto[] | undefined;
+    totalCount: number;
+}
+
 export class StaffDto implements IStaffDto {
     id: number;
     tenantId: number;
     personId: number;
     staffNumber: string | undefined;
-    person: Person;
+    person: PersonDto;
 
     constructor(data?: IStaffDto) {
         if (data) {
@@ -5640,7 +6971,7 @@ export class StaffDto implements IStaffDto {
             this.tenantId = _data["tenantId"];
             this.personId = _data["personId"];
             this.staffNumber = _data["staffNumber"];
-            this.person = _data["person"] ? Person.fromJS(_data["person"]) : <any>undefined;
+            this.person = _data["person"] ? PersonDto.fromJS(_data["person"]) : <any>undefined;
         }
     }
 
@@ -5674,7 +7005,7 @@ export interface IStaffDto {
     tenantId: number;
     personId: number;
     staffNumber: string | undefined;
-    person: Person;
+    person: PersonDto;
 }
 
 export class StaffDtoPagedResultDto implements IStaffDtoPagedResultDto {
@@ -6096,8 +7427,99 @@ export interface ITenantLoginInfoDto {
     name: string | undefined;
 }
 
+export class Trip implements ITrip {
+    id: number;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    lastModificationTime: moment.Moment | undefined;
+    lastModifierUserId: number | undefined;
+    isDeleted: boolean;
+    deleterUserId: number | undefined;
+    deletionTime: moment.Moment | undefined;
+    tenantId: number;
+    scheduleId: number;
+    departureTime: moment.Moment;
+    arrivalTime: moment.Moment;
+
+    constructor(data?: ITrip) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? moment(_data["creationTime"].toString()) : <any>undefined;
+            this.creatorUserId = _data["creatorUserId"];
+            this.lastModificationTime = _data["lastModificationTime"] ? moment(_data["lastModificationTime"].toString()) : <any>undefined;
+            this.lastModifierUserId = _data["lastModifierUserId"];
+            this.isDeleted = _data["isDeleted"];
+            this.deleterUserId = _data["deleterUserId"];
+            this.deletionTime = _data["deletionTime"] ? moment(_data["deletionTime"].toString()) : <any>undefined;
+            this.tenantId = _data["tenantId"];
+            this.scheduleId = _data["scheduleId"];
+            this.departureTime = _data["departureTime"] ? moment(_data["departureTime"].toString()) : <any>undefined;
+            this.arrivalTime = _data["arrivalTime"] ? moment(_data["arrivalTime"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): Trip {
+        data = typeof data === 'object' ? data : {};
+        let result = new Trip();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : <any>undefined;
+        data["creatorUserId"] = this.creatorUserId;
+        data["lastModificationTime"] = this.lastModificationTime ? this.lastModificationTime.toISOString() : <any>undefined;
+        data["lastModifierUserId"] = this.lastModifierUserId;
+        data["isDeleted"] = this.isDeleted;
+        data["deleterUserId"] = this.deleterUserId;
+        data["deletionTime"] = this.deletionTime ? this.deletionTime.toISOString() : <any>undefined;
+        data["tenantId"] = this.tenantId;
+        data["scheduleId"] = this.scheduleId;
+        data["departureTime"] = this.departureTime ? this.departureTime.toISOString() : <any>undefined;
+        data["arrivalTime"] = this.arrivalTime ? this.arrivalTime.toISOString() : <any>undefined;
+        return data; 
+    }
+
+    clone(): Trip {
+        const json = this.toJSON();
+        let result = new Trip();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ITrip {
+    id: number;
+    creationTime: moment.Moment;
+    creatorUserId: number | undefined;
+    lastModificationTime: moment.Moment | undefined;
+    lastModifierUserId: number | undefined;
+    isDeleted: boolean;
+    deleterUserId: number | undefined;
+    deletionTime: moment.Moment | undefined;
+    tenantId: number;
+    scheduleId: number;
+    departureTime: moment.Moment;
+    arrivalTime: moment.Moment;
+}
+
 export class TripDto implements ITripDto {
     id: number;
+    tenantId: number;
+    scheduleId: number;
+    departureTime: string | undefined;
+    arrivalTime: string | undefined;
 
     constructor(data?: ITripDto) {
         if (data) {
@@ -6111,6 +7533,10 @@ export class TripDto implements ITripDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
+            this.tenantId = _data["tenantId"];
+            this.scheduleId = _data["scheduleId"];
+            this.departureTime = _data["departureTime"];
+            this.arrivalTime = _data["arrivalTime"];
         }
     }
 
@@ -6124,6 +7550,10 @@ export class TripDto implements ITripDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["tenantId"] = this.tenantId;
+        data["scheduleId"] = this.scheduleId;
+        data["departureTime"] = this.departureTime;
+        data["arrivalTime"] = this.arrivalTime;
         return data; 
     }
 
@@ -6137,6 +7567,10 @@ export class TripDto implements ITripDto {
 
 export interface ITripDto {
     id: number;
+    tenantId: number;
+    scheduleId: number;
+    departureTime: string | undefined;
+    arrivalTime: string | undefined;
 }
 
 export class TripDtoPagedResultDto implements ITripDtoPagedResultDto {

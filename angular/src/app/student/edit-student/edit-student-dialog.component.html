@@ -1,0 +1,109 @@
+<form
+  class="form-horizontal"
+  autocomplete="off"
+  #createStudentModal="ngForm"
+  (ngSubmit)="save()"
+>
+  <abp-modal-header
+    [title]="'Edit Existing Student' | localize"
+    (onCloseClick)="bsModalRef.hide()"
+  ></abp-modal-header>
+  <div class="modal-body">
+
+    <div class="form-group row required">
+      <label class="col-md-3 col-form-label" for="studentNumber">
+        {{ "Student Number" | localize }}
+      </label>
+      <div class="col-md-9">
+        <input
+          type="text"
+          class="form-control"
+          name="studentNumber"
+          id="studentNumber"
+          required
+          maxlength="32"
+          [(ngModel)]="student.studentNumber"
+          #studentNumberModel="ngModel"
+          #studentNumberEl
+        />
+        <abp-validation-summary
+          [control]="studentNumberModel"
+          [controlEl]="studentNumberEl"
+        ></abp-validation-summary>
+      </div>
+    </div>
+
+    <div class="form-group row required">
+      <label class="col-md-3 col-form-label" for="surname">
+        {{ "Student Surname" | localize }}
+      </label>
+      <div class="col-md-9">
+        <input
+          type="text"
+          class="form-control"
+          name="surname"
+          id="surname"
+          required
+          maxlength="32"
+          [(ngModel)]="student.person.surname"
+          #surnameModel="ngModel"
+          #surnameEl
+        />
+        <abp-validation-summary
+          [control]="surnameModel"
+          [controlEl]="surnameEl"
+        ></abp-validation-summary>
+      </div>
+    </div>
+
+    <div class="form-group row required">
+      <label class="col-md-3 col-form-label" for="dateOfBirth">
+        {{ "Date Of Birth" | localize }}
+      </label>
+      <div class="col-md-9">
+        <input
+          type="date"
+          class="form-control"
+          name="dateOfBirth"
+          id="dateOfBirth"
+          required
+          [(ngModel)]="student.person.dateOfBirth"
+          #dateOfBirthModel="ngModel"
+          #dateOfBirthEl
+        />
+        <abp-validation-summary
+          [control]="dateOfBirthModel"
+          [controlEl]="dateOfBirthEl"
+        ></abp-validation-summary>
+      </div>
+    </div>
+
+    <div class="form-group row required">
+      <label class="col-md-3 col-form-label" for="idNumber">
+        {{ "ID Number" | localize }}
+      </label>
+      <div class="col-md-9">
+        <input
+          type="text"
+          class="form-control"
+          name="idNumber"
+          id="idNumber"
+          required
+          maxlength="13"
+          [(ngModel)]="student.person.idNumber"
+          #idNumberModel="ngModel"
+          #idNumberEl
+        />
+        <abp-validation-summary
+          [control]="idNumberModel"
+          [controlEl]="idNumberEl"
+        ></abp-validation-summary>
+      </div>
+    </div>
+  </div>
+  <abp-modal-footer
+    [cancelDisabled]="saving"
+    [saveDisabled]="!createStudentModal.form.valid || saving"
+    (onCancelClick)="bsModalRef.hide()"
+  ></abp-modal-footer>
+</form>

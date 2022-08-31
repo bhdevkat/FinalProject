@@ -38,22 +38,30 @@ import { SidebarComponent } from './layout/sidebar.component';
 import { SidebarLogoComponent } from './layout/sidebar-logo.component';
 import { SidebarUserPanelComponent } from './layout/sidebar-user-panel.component';
 import { SidebarMenuComponent } from './layout/sidebar-menu.component';
+//Student
 import { StudentComponent } from './student/student.component';
-import { TripComponent } from './trip/trip.component';
+import { CreateStudentDialogComponent } from './student/create-student/create-student-dialog.component';
+import { EditStudentDialogComponent } from './student/edit-student/edit-student-dialog.component';
+//Staff
 import { StaffComponent } from './staff/staff.component';
+import { EditStaffDialogComponent } from './staff/edit-staff/edit-staff-dialog.component';
+import { CreateStaffDialogComponent } from './staff/create-staff/create-staff-dialog.component';
+//Bus
 import { BusComponent } from './bus/bus.component';
-import { BoardingComponent } from './boarding/boarding.component';
-import { CreateStudentComponent } from './student/create-student/create-student.component';
-import { EditStudentComponent } from './student/edit-student/edit-student.component';
-import { CreateBoardingComponent } from './boarding/create-boarding/create-boarding.component';
-import { EditBoardingComponent } from './boarding/edit-boarding/edit-boarding.component';
-import { CreateBusComponent } from './bus/create-bus/create-bus.component';
-import { EditBusComponent } from './bus/edit-bus/edit-bus.component';
-import { EditStaffComponent } from './staff/edit-staff/edit-staff.component';
-import { CreateStaffComponent } from './staff/create-staff/create-staff.component';
-import { CreateTripComponent } from './trip/create-trip/create-trip.component';
-import { EditTripComponent } from './trip/edit-trip/edit-trip.component';
+import { CreateBusDialogComponent } from './bus/create-bus/create-bus-dialog.component';
+import { EditBusDialogComponent } from './bus/edit-bus/edit-bus-dialog.component';
+//Location
 import { LocationComponent } from './location/location.component';
+import { CreateLocationDialogComponent } from './location/create-location/create-location-dialog.component';
+import { EditLocationDialogComponent } from './location/edit-location/edit-location-dialog.component';
+//Boarding
+import { BoardingComponent } from './boarding/boarding.component';
+import { CreateBoardingDialogComponent } from './boarding/create-boarding/create-boarding-dialog.component';
+import { EditBoardingDialogComponent } from './boarding/edit-boarding/edit-boarding-dialog.component';
+//Trip
+import { TripComponent } from './trip/trip.component';
+import { CreateTripDialogComponent } from './trip/create-trip/create-trip-dialog.component';
+import { EditTripDialogComponent } from './trip/edit-trip/edit-trip-dialog.component';
 
 @NgModule({
   declarations: [
@@ -84,22 +92,34 @@ import { LocationComponent } from './location/location.component';
     SidebarLogoComponent,
     SidebarUserPanelComponent,
     SidebarMenuComponent,
-    StudentComponent,
+    //Trip
     TripComponent,
-    StaffComponent,
+    EditTripDialogComponent,
+    CreateTripDialogComponent,
+    //Bus
     BusComponent,
+    EditBusDialogComponent,
+    CreateBusDialogComponent,
+    //Student
+    StudentComponent,
+    CreateStudentDialogComponent,
+    EditStudentDialogComponent,
+    //Boarding
     BoardingComponent,
-    CreateStudentComponent,
-    EditStudentComponent,
-    CreateBoardingComponent,
-    EditBoardingComponent,
-    CreateBusComponent,
-    EditBusComponent,
-    EditStaffComponent,
-    CreateStaffComponent,
-    CreateTripComponent,
-    EditTripComponent,
-    LocationComponent
+    CreateBoardingDialogComponent,
+    EditBoardingDialogComponent,
+    //Staff
+    StaffComponent,
+    EditStaffDialogComponent,
+    CreateStaffDialogComponent,
+    //Trip
+    TripComponent,
+    CreateTripDialogComponent,
+    EditTripDialogComponent,
+    //Location
+    LocationComponent,
+    CreateLocationDialogComponent,
+    EditLocationDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -128,6 +148,27 @@ import { LocationComponent } from './location/location.component';
     CreateUserDialogComponent,
     EditUserDialogComponent,
     ResetPasswordDialogComponent,
+    //Trip
+    EditTripDialogComponent,
+    CreateTripDialogComponent,
+    //Bus
+    EditBusDialogComponent,
+    CreateBusDialogComponent,
+    //Student
+    CreateStudentDialogComponent,
+    EditStudentDialogComponent,
+    //Boarding
+    CreateBoardingDialogComponent,
+    EditBoardingDialogComponent,
+    //Staff
+    EditStaffDialogComponent,
+    CreateStaffDialogComponent,
+    //Trip
+    CreateTripDialogComponent,
+    EditTripDialogComponent,
+    //Location
+    CreateLocationDialogComponent,
+    EditLocationDialogComponent,
   ],
 })
 export class AppModule {}
