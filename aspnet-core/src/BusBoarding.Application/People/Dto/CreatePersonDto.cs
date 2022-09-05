@@ -2,6 +2,7 @@
 using Abp.AutoMapper;
 using BusBoardingSystem.Domain;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace BusBoardingSystem.PeopleAS.Dto
 {
@@ -10,6 +11,8 @@ namespace BusBoardingSystem.PeopleAS.Dto
     {
         public int TenantId { get; set; }
 
+        public int TagId { get; set; }
+
         public string Firstname { get; set; }
 
         public string Surname { get; set; }
@@ -17,5 +20,10 @@ namespace BusBoardingSystem.PeopleAS.Dto
         public string DateOfBirth { get; set; }
 
         public string IdNumber { get; set; }
+
+        [StringLength(100)]
+        public string LogoImageType { get; set; }
+
+        public byte[] LogoImage { get; set; }
     }
 }

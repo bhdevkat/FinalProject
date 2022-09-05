@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace BusBoarding.Controllers
 {
@@ -12,10 +13,13 @@ namespace BusBoarding.Controllers
     public class RegisterController : BusBoardingControllerBase
     {
         private readonly IRepository<Student> _studentTrpository;
+        private readonly IRepository<Tag> _tagRepository;
 
-        public RegisterController(IRepository<Student> studentTrpository)
+        public RegisterController(IRepository<Student> studentTrpository, 
+            IRepository<Tag> tagRepository)
         {
             _studentTrpository = studentTrpository;
+            _tagRepository = tagRepository;
         }
 
         [HttpGet(template:"/api/client/v1/student/{studentId}")]
@@ -23,6 +27,33 @@ namespace BusBoarding.Controllers
         {
             var student = await _studentTrpository.GetAsync(studentId);
             return student;
+        }
+
+        [HttpPost(template: "/api/client/v1/addTag")]
+        public async Task<ActionResult<int>> AddTag(string uid)
+        {
+            try
+            {
+                var Tag = await _tagRepository.GetAllListAsync();
+
+                if (Tag.SingleOrDefault(x => x.Uid == uid) != null)
+                    return Conflict("Tag Already registered");
+
+                Tag newTag = new Tag
+                {
+                    Uid = uid
+                };
+
+                await _tagRepository.InsertAsync(newTag);
+                await CurrentUnitOfWork.SaveChangesAsync();
+
+                return CreatedAtAction(nameof(AddTag),newTag);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "Error creating new tag record");
+            }
         }
 
         [HttpPost(template: "/api/client/v1/test")]

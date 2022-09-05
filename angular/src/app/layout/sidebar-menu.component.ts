@@ -19,7 +19,7 @@ export class SidebarMenuComponent extends AppComponentBase implements OnInit {
     menuItemsMap: { [key: number]: MenuItem } = {};
     activatedMenuItems: MenuItem[] = [];
     routerEvents: BehaviorSubject<RouterEvent> = new BehaviorSubject(undefined);
-    homeRoute = '/app/about';
+    homeRoute = '/app/home';
 
     constructor(injector: Injector, private router: Router) {
         super(injector);
@@ -75,9 +75,9 @@ export class SidebarMenuComponent extends AppComponentBase implements OnInit {
                 // 'Pages.Bus'
             ),
             new MenuItem(
-                this.l('Location'),
+                this.l('Destination'),
                 '/app/location',
-                'fas fa-location-arrow',
+                'fas fa-map-marked-alt',
                 // 'Pages.Boading'
             ),
             new MenuItem(
@@ -87,9 +87,9 @@ export class SidebarMenuComponent extends AppComponentBase implements OnInit {
                 // 'Pages.Boading'
             ),
             new MenuItem(
-                this.l('Boarding'),
+                this.l('Trips'),
                 '/app/boarding',
-                'fas fa-map-marked-alt',
+                'fas fa-location-arrow',
                 // 'Pages.Boading'
             ),
             new MenuItem(

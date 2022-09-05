@@ -18,6 +18,8 @@ namespace BusBoarding.EntityFrameworkCore
         public DbSet<Staff> Staff { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<Trip> Trips { get; set; }
+
+        public DbSet<Tag> Tags { get; set; }
         public BusBoardingDbContext(DbContextOptions<BusBoardingDbContext> options)
             : base(options)
         {

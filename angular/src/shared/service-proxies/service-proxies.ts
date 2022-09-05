@@ -1162,6 +1162,118 @@ export class V1ServiceProxy {
         }
         return _observableOf<Student>(<any>null);
     }
+
+    /**
+     * @param uid (optional) 
+     * @return Success
+     */
+    addTag(uid: string | undefined): Observable<number> {
+        let url_ = this.baseUrl + "/api/client/v1/addTag?";
+        if (uid === null)
+            throw new Error("The parameter 'uid' cannot be null.");
+        else if (uid !== undefined)
+            url_ += "uid=" + encodeURIComponent("" + uid) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAddTag(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAddTag(<any>response_);
+                } catch (e) {
+                    return <Observable<number>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<number>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processAddTag(response: HttpResponseBase): Observable<number> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<number>(<any>null);
+    }
+
+    /**
+     * @param emp (optional) 
+     * @return Success
+     */
+    test(emp: number | undefined): Observable<number> {
+        let url_ = this.baseUrl + "/api/client/v1/test?";
+        if (emp === null)
+            throw new Error("The parameter 'emp' cannot be null.");
+        else if (emp !== undefined)
+            url_ += "emp=" + encodeURIComponent("" + emp) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processTest(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTest(<any>response_);
+                } catch (e) {
+                    return <Observable<number>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<number>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processTest(response: HttpResponseBase): Observable<number> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<number>(<any>null);
+    }
 }
 
 @Injectable()
@@ -2579,6 +2691,76 @@ export class StudentServiceProxy {
             }));
         }
         return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable()
+export class TagServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @return Success
+     */
+    getDropdrownData(): Observable<TagDto[]> {
+        let url_ = this.baseUrl + "/api/services/app/Tag/GetDropdrownData";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetDropdrownData(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetDropdrownData(<any>response_);
+                } catch (e) {
+                    return <Observable<TagDto[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<TagDto[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetDropdrownData(response: HttpResponseBase): Observable<TagDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200.push(TagDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<TagDto[]>(<any>null);
     }
 }
 
@@ -4772,10 +4954,13 @@ export interface ICreateLocationDto {
 export class CreatePersonDto implements ICreatePersonDto {
     id: number;
     tenantId: number;
+    tagId: number;
     firstname: string | undefined;
     surname: string | undefined;
     dateOfBirth: string | undefined;
     idNumber: string | undefined;
+    logoImageType: string | undefined;
+    logoImage: string | undefined;
 
     constructor(data?: ICreatePersonDto) {
         if (data) {
@@ -4790,10 +4975,13 @@ export class CreatePersonDto implements ICreatePersonDto {
         if (_data) {
             this.id = _data["id"];
             this.tenantId = _data["tenantId"];
+            this.tagId = _data["tagId"];
             this.firstname = _data["firstname"];
             this.surname = _data["surname"];
             this.dateOfBirth = _data["dateOfBirth"];
             this.idNumber = _data["idNumber"];
+            this.logoImageType = _data["logoImageType"];
+            this.logoImage = _data["logoImage"];
         }
     }
 
@@ -4808,10 +4996,13 @@ export class CreatePersonDto implements ICreatePersonDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["tenantId"] = this.tenantId;
+        data["tagId"] = this.tagId;
         data["firstname"] = this.firstname;
         data["surname"] = this.surname;
         data["dateOfBirth"] = this.dateOfBirth;
         data["idNumber"] = this.idNumber;
+        data["logoImageType"] = this.logoImageType;
+        data["logoImage"] = this.logoImage;
         return data; 
     }
 
@@ -4826,10 +5017,13 @@ export class CreatePersonDto implements ICreatePersonDto {
 export interface ICreatePersonDto {
     id: number;
     tenantId: number;
+    tagId: number;
     firstname: string | undefined;
     surname: string | undefined;
     dateOfBirth: string | undefined;
     idNumber: string | undefined;
+    logoImageType: string | undefined;
+    logoImage: string | undefined;
 }
 
 export class CreateRoleDto implements ICreateRoleDto {
@@ -6053,10 +6247,13 @@ export class Person implements IPerson {
     deleterUserId: number | undefined;
     deletionTime: moment.Moment | undefined;
     tenantId: number;
+    tagId: number;
     firstname: string | undefined;
     surname: string | undefined;
     dateOfBirth: moment.Moment;
     idNumber: string | undefined;
+    logoImageType: string | undefined;
+    logoImage: string | undefined;
 
     constructor(data?: IPerson) {
         if (data) {
@@ -6078,10 +6275,13 @@ export class Person implements IPerson {
             this.deleterUserId = _data["deleterUserId"];
             this.deletionTime = _data["deletionTime"] ? moment(_data["deletionTime"].toString()) : <any>undefined;
             this.tenantId = _data["tenantId"];
+            this.tagId = _data["tagId"];
             this.firstname = _data["firstname"];
             this.surname = _data["surname"];
             this.dateOfBirth = _data["dateOfBirth"] ? moment(_data["dateOfBirth"].toString()) : <any>undefined;
             this.idNumber = _data["idNumber"];
+            this.logoImageType = _data["logoImageType"];
+            this.logoImage = _data["logoImage"];
         }
     }
 
@@ -6103,10 +6303,13 @@ export class Person implements IPerson {
         data["deleterUserId"] = this.deleterUserId;
         data["deletionTime"] = this.deletionTime ? this.deletionTime.toISOString() : <any>undefined;
         data["tenantId"] = this.tenantId;
+        data["tagId"] = this.tagId;
         data["firstname"] = this.firstname;
         data["surname"] = this.surname;
         data["dateOfBirth"] = this.dateOfBirth ? this.dateOfBirth.toISOString() : <any>undefined;
         data["idNumber"] = this.idNumber;
+        data["logoImageType"] = this.logoImageType;
+        data["logoImage"] = this.logoImage;
         return data; 
     }
 
@@ -6128,10 +6331,13 @@ export interface IPerson {
     deleterUserId: number | undefined;
     deletionTime: moment.Moment | undefined;
     tenantId: number;
+    tagId: number;
     firstname: string | undefined;
     surname: string | undefined;
     dateOfBirth: moment.Moment;
     idNumber: string | undefined;
+    logoImageType: string | undefined;
+    logoImage: string | undefined;
 }
 
 export class PersonDto implements IPersonDto {
@@ -7258,6 +7464,57 @@ export class StudentDtoPagedResultDto implements IStudentDtoPagedResultDto {
 export interface IStudentDtoPagedResultDto {
     items: StudentDto[] | undefined;
     totalCount: number;
+}
+
+export class TagDto implements ITagDto {
+    id: number;
+    uid: string | undefined;
+    isAssigned: boolean;
+
+    constructor(data?: ITagDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.uid = _data["uid"];
+            this.isAssigned = _data["isAssigned"];
+        }
+    }
+
+    static fromJS(data: any): TagDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TagDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["uid"] = this.uid;
+        data["isAssigned"] = this.isAssigned;
+        return data; 
+    }
+
+    clone(): TagDto {
+        const json = this.toJSON();
+        let result = new TagDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ITagDto {
+    id: number;
+    uid: string | undefined;
+    isAssigned: boolean;
 }
 
 export enum TenantAvailabilityState {

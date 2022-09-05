@@ -10,7 +10,9 @@ import { AppComponentBase } from '@shared/app-component-base';
 import {
   StudentServiceProxy,
   CreateStudentDto,
-  CreatePersonDto
+  CreatePersonDto,
+  TagDto,
+  TagServiceProxy
 } from '@shared/service-proxies/service-proxies';
 import { forEach as _forEach, map as _map } from 'lodash-es';
 
@@ -22,23 +24,28 @@ import { forEach as _forEach, map as _map } from 'lodash-es';
 export class CreateStudentDialogComponent extends AppComponentBase
   implements OnInit {
   saving = false;
-  student = new CreateStudentDto();  
+  student = new CreateStudentDto(); 
+  tags: TagDto[]; 
 
   @Output() onSave = new EventEmitter<any>();
 
   constructor(
     injector: Injector,
     private _studentService: StudentServiceProxy,
+    public _tagService: TagServiceProxy,
     public bsModalRef: BsModalRef
   ) {
     super(injector);
-    //this.student.person = new Person();
+    //this.student.person = new Person();    
   }
 
-  ngOnInit(): void {
-    
+  ngOnInit(): void {    
     this.student.person= new CreatePersonDto();
-    //this.student.person.firstname
+    this._tagService.getDropdrownData().subscribe((result: TagDto[]) => {
+      if(result != null)      
+        this.tags = result;  
+        //this.student.person.tagId 
+    });
   }
  
   save(): void {
