@@ -10,5 +10,6 @@ namespace BusBoardingSystem.ScheduleAS
 {
     public interface IScheduleAppService : IAsyncCrudAppService<ScheduleDto, int, PagedScheduleResultRequestDto, CreateScheduleDto, ScheduleDto>
     {
+        Task<DropdownItemDto> GetDropdrownData();
     }
 }

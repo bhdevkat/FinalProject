@@ -63,6 +63,13 @@ import { TripComponent } from './trip/trip.component';
 import { CreateTripDialogComponent } from './trip/create-trip/create-trip-dialog.component';
 import { EditTripDialogComponent } from './trip/edit-trip/edit-trip-dialog.component';
 
+//Schedule
+import { ScheduleComponent } from './schedule/schedule.component';
+import { CreateScheduleDialogComponent } from './schedule/create-schedule/create-schedule-dialog.component';
+import { EditScheduleDialogComponent } from './schedule/edit-schedule/edit-schedule-dialog.component';
+
+import { WebcamModule } from 'ngx-webcam';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -120,6 +127,10 @@ import { EditTripDialogComponent } from './trip/edit-trip/edit-trip-dialog.compo
     LocationComponent,
     CreateLocationDialogComponent,
     EditLocationDialogComponent,
+    //Location
+    ScheduleComponent,
+    CreateScheduleDialogComponent,
+    EditScheduleDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -135,6 +146,7 @@ import { EditTripDialogComponent } from './trip/edit-trip/edit-trip-dialog.compo
     ServiceProxyModule,
     SharedModule,
     NgxPaginationModule,
+    WebcamModule
   ],
   providers: [],
   entryComponents: [
@@ -169,6 +181,9 @@ import { EditTripDialogComponent } from './trip/edit-trip/edit-trip-dialog.compo
     //Location
     CreateLocationDialogComponent,
     EditLocationDialogComponent,
+    //Location
+    CreateScheduleDialogComponent,
+    EditScheduleDialogComponent,
   ],
 })
 export class AppModule {}

@@ -28,19 +28,19 @@ namespace BusBoardingSystem.ScheduleAS.Dto
         //Destination location
         public int DestinationId { get; set; }
 
-        public int BusReg { get; set; }
+        public string BusReg { get; set; }
 
         //Staff Id of 
-        public int AssignedByName { get; set; }
+        public string AssignedByName { get; set; }
 
         //Staff Id of driver
-        public int DriverName { get; set; }
+        public string DriverName { get; set; }
 
         //Departure location
-        public int DepartureName { get; set; }
+        public string DepartureName { get; set; }
 
         //Destination location
-        public int DestinationName { get; set; }
+        public string DestinationName { get; set; }
 
         public string ExpectedDepartureTime { get; set; }
     }

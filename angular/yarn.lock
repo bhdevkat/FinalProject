@@ -5353,6 +5353,13 @@ ngx-pagination@^5.0.0:
   resolved "https://registry.npmjs.org/ngx-pagination/-/ngx-pagination-5.1.1.tgz"
   integrity sha512-KxHES+Dn6pbetytO9ng2GAdclmo4UcwzFmQyVPWh2xRPbAlv5/ezL2xnDVBFMqCoJQaZagvdQ+ZZFbqGWqAvCQ==
 
+ngx-webcam@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/ngx-webcam/-/ngx-webcam-0.4.1.tgz#2493b7a5b2b3acd9590c4384255f269fefc678a8"
+  integrity sha512-8WoC8GWHaN5tH+4zO0/gfUigVKg/jX7JShAewpumJIgJXFmlKhSPnPjewNNxv7OTQiOOb+5Mh6lhTo52VLlY9A==
+  dependencies:
+    tslib "^2.3.0"
+
 nice-try@^1.0.4:
   version "1.0.5"
   resolved "https://registry.npmjs.org/nice-try/-/nice-try-1.0.5.tgz"
@@ -7766,6 +7773,11 @@ tslib@^2.0.0, tslib@^2.0.3, tslib@^2.1.0:
   version "2.3.0"
   resolved "https://registry.npmjs.org/tslib/-/tslib-2.3.0.tgz"
   integrity sha512-N82ooyxVNm6h1riLCoyS9e3fuJ3AMG2zIZs2Gd1ATcSFjSA23Q0fzjjZeh0jbJvWVDZ0cJT8yaNNaaXHzueNjg==
+
+tslib@^2.3.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.4.0.tgz#7cecaa7f073ce680a05847aa77be941098f36dc3"
+  integrity sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==
 
 tslint@~6.1.0:
   version "6.1.3"

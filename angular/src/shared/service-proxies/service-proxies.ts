@@ -801,6 +801,69 @@ export class ConfigurationServiceProxy {
 }
 
 @Injectable()
+export class HomeServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @return Success
+     */
+    getStatisticalData(): Observable<HomeDto> {
+        let url_ = this.baseUrl + "/api/services/app/Home/GetStatisticalData";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetStatisticalData(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetStatisticalData(<any>response_);
+                } catch (e) {
+                    return <Observable<HomeDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<HomeDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetStatisticalData(response: HttpResponseBase): Observable<HomeDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = HomeDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<HomeDto>(<any>null);
+    }
+}
+
+@Injectable()
 export class LocationServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -1980,6 +2043,57 @@ export class ScheduleServiceProxy {
             }));
         }
         return _observableOf<ScheduleDto>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    getDropdrownData(): Observable<DropdownItemDto> {
+        let url_ = this.baseUrl + "/api/services/app/Schedule/GetDropdrownData";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetDropdrownData(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetDropdrownData(<any>response_);
+                } catch (e) {
+                    return <Observable<DropdownItemDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<DropdownItemDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGetDropdrownData(response: HttpResponseBase): Observable<DropdownItemDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = DropdownItemDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<DropdownItemDto>(<any>null);
     }
 
     /**
@@ -5475,6 +5589,81 @@ export interface ICreateUserDto {
     password: string;
 }
 
+export class DropdownItemDto implements IDropdownItemDto {
+    staff: StaffDto[] | undefined;
+    buses: BusDto[] | undefined;
+    locations: LocationDto[] | undefined;
+
+    constructor(data?: IDropdownItemDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["staff"])) {
+                this.staff = [] as any;
+                for (let item of _data["staff"])
+                    this.staff.push(StaffDto.fromJS(item));
+            }
+            if (Array.isArray(_data["buses"])) {
+                this.buses = [] as any;
+                for (let item of _data["buses"])
+                    this.buses.push(BusDto.fromJS(item));
+            }
+            if (Array.isArray(_data["locations"])) {
+                this.locations = [] as any;
+                for (let item of _data["locations"])
+                    this.locations.push(LocationDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): DropdownItemDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new DropdownItemDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.staff)) {
+            data["staff"] = [];
+            for (let item of this.staff)
+                data["staff"].push(item.toJSON());
+        }
+        if (Array.isArray(this.buses)) {
+            data["buses"] = [];
+            for (let item of this.buses)
+                data["buses"].push(item.toJSON());
+        }
+        if (Array.isArray(this.locations)) {
+            data["locations"] = [];
+            for (let item of this.locations)
+                data["locations"].push(item.toJSON());
+        }
+        return data; 
+    }
+
+    clone(): DropdownItemDto {
+        const json = this.toJSON();
+        let result = new DropdownItemDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IDropdownItemDto {
+    staff: StaffDto[] | undefined;
+    buses: BusDto[] | undefined;
+    locations: LocationDto[] | undefined;
+}
+
 export class ExternalAuthenticateModel implements IExternalAuthenticateModel {
     authProvider: string;
     providerKey: string;
@@ -5795,6 +5984,105 @@ export interface IGetRoleForEditOutput {
     role: RoleEditDto;
     permissions: FlatPermissionDto[] | undefined;
     grantedPermissionNames: string[] | undefined;
+}
+
+export class HomeDto implements IHomeDto {
+    id: number;
+    userCount: number;
+    staffCount: number;
+    studentCount: number;
+    roleCount: number;
+    busCount: number;
+    destinationCount: number;
+    scheduleCount: number;
+    tripCount: number;
+    schedules: ScheduleDto[] | undefined;
+    trips: TripDto[] | undefined;
+
+    constructor(data?: IHomeDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.userCount = _data["userCount"];
+            this.staffCount = _data["staffCount"];
+            this.studentCount = _data["studentCount"];
+            this.roleCount = _data["roleCount"];
+            this.busCount = _data["busCount"];
+            this.destinationCount = _data["destinationCount"];
+            this.scheduleCount = _data["scheduleCount"];
+            this.tripCount = _data["tripCount"];
+            if (Array.isArray(_data["schedules"])) {
+                this.schedules = [] as any;
+                for (let item of _data["schedules"])
+                    this.schedules.push(ScheduleDto.fromJS(item));
+            }
+            if (Array.isArray(_data["trips"])) {
+                this.trips = [] as any;
+                for (let item of _data["trips"])
+                    this.trips.push(TripDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): HomeDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new HomeDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["userCount"] = this.userCount;
+        data["staffCount"] = this.staffCount;
+        data["studentCount"] = this.studentCount;
+        data["roleCount"] = this.roleCount;
+        data["busCount"] = this.busCount;
+        data["destinationCount"] = this.destinationCount;
+        data["scheduleCount"] = this.scheduleCount;
+        data["tripCount"] = this.tripCount;
+        if (Array.isArray(this.schedules)) {
+            data["schedules"] = [];
+            for (let item of this.schedules)
+                data["schedules"].push(item.toJSON());
+        }
+        if (Array.isArray(this.trips)) {
+            data["trips"] = [];
+            for (let item of this.trips)
+                data["trips"].push(item.toJSON());
+        }
+        return data; 
+    }
+
+    clone(): HomeDto {
+        const json = this.toJSON();
+        let result = new HomeDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IHomeDto {
+    id: number;
+    userCount: number;
+    staffCount: number;
+    studentCount: number;
+    roleCount: number;
+    busCount: number;
+    destinationCount: number;
+    scheduleCount: number;
+    tripCount: number;
+    schedules: ScheduleDto[] | undefined;
+    trips: TripDto[] | undefined;
 }
 
 export class Int64EntityDto implements IInt64EntityDto {
@@ -7017,11 +7305,11 @@ export class ScheduleDto implements IScheduleDto {
     driverId: number;
     departureId: number;
     destinationId: number;
-    busReg: number;
-    assignedByName: number;
-    driverName: number;
-    departureName: number;
-    destinationName: number;
+    busReg: string | undefined;
+    assignedByName: string | undefined;
+    driverName: string | undefined;
+    departureName: string | undefined;
+    destinationName: string | undefined;
     expectedDepartureTime: string | undefined;
 
     constructor(data?: IScheduleDto) {
@@ -7092,11 +7380,11 @@ export interface IScheduleDto {
     driverId: number;
     departureId: number;
     destinationId: number;
-    busReg: number;
-    assignedByName: number;
-    driverName: number;
-    departureName: number;
-    destinationName: number;
+    busReg: string | undefined;
+    assignedByName: string | undefined;
+    driverName: string | undefined;
+    departureName: string | undefined;
+    destinationName: string | undefined;
     expectedDepartureTime: string | undefined;
 }
 

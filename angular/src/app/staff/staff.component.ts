@@ -25,10 +25,10 @@ class PagedStaffesRequestDto extends PagedRequestDto {
 })
 
 export class StaffComponent extends PagedListingComponentBase<StaffDto> {
-    staffs: StaffDto[] = [];
+    myStaff: StaffDto[] = [];
     keyword = '';
     isActive: boolean | null;
-    advancedFiltersVisible = false;
+    advancedFiltersVisible = false;    
   
     constructor(
       injector: Injector,
@@ -53,7 +53,7 @@ export class StaffComponent extends PagedListingComponentBase<StaffDto> {
           })
         )
         .subscribe((result: StaffDtoPagedResultDto) => {
-          this.staffs = result.items;
+          this.myStaff = result.items;
           this.showPaging(result, pageNumber);
         });
     }

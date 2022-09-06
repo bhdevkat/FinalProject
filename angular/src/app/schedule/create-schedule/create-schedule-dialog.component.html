@@ -1,0 +1,119 @@
+<form
+  class="form-horizontal"
+  autocomplete="off"
+  #createRoleForm="ngForm"
+  (ngSubmit)="save()"
+>
+  <abp-modal-header
+    [title]="'Add New Schedule' | localize"
+    (onCloseClick)="bsModalRef.hide()"
+  ></abp-modal-header>
+  <div class="modal-body">
+
+  <div class="form-group row required">
+    <label class="col-md-3 col-form-label" for="idNumber">
+      {{ "Select bus" | localize }}
+    </label>
+    <div class="col-md-9">
+    <select
+          class="form-control"
+          id="busId"
+          name="busId"
+          required
+          [(ngModel)]="schedule.busId"
+          #busIdModel="ngModel"
+          #busIdEl>
+      <option value="0" selected disabled>Select bus</option>
+      <option *ngFor="let bus of dropdownList.buses" [value]="bus.id">
+          {{bus.registrationNumber}}
+      </option>
+    </select>
+    <abp-validation-summary
+          [control]="busIdModel"
+          [controlEl]="busIdEl"
+    ></abp-validation-summary>
+    </div>
+  </div>
+
+  <div class="form-group row required">
+    <label class="col-md-3 col-form-label" for="idNumber">
+      {{ "Select driver" | localize }}
+    </label>
+    <div class="col-md-9">
+    <select
+          class="form-control"
+          id="driverId"
+          name="driverId"
+          required
+          [(ngModel)]="schedule.driverId"
+          #driverIdModel="ngModel"
+          #driverIdEl>
+      <option value="0" selected disabled>Select driver</option>
+      <option *ngFor="let driver of dropdownList.staff" [value]="driver.id">
+          {{driver.person.firstname}}
+      </option>
+    </select>
+    <abp-validation-summary
+          [control]="driverIdModel"
+          [controlEl]="driverIdEl"
+    ></abp-validation-summary>
+    </div>
+  </div>
+
+  <div class="form-group row required">
+    <label class="col-md-3 col-form-label" for="idNumber">
+      {{ "Select departure location" | localize }}
+    </label>
+    <div class="col-md-9">
+    <select
+          class="form-control"
+          id="departureId"
+          name="departureId"
+          required
+          [(ngModel)]="schedule.departureId"
+          #departureIdModel="ngModel"
+          #departureIdEl>
+      <option value="0" selected disabled>Select departure</option>
+      <option *ngFor="let departure of dropdownList.locations" [value]="departure.id">
+          {{departure.name}}
+      </option>
+    </select>
+    <abp-validation-summary
+          [control]="departureIdModel"
+          [controlEl]="departureIdEl"
+    ></abp-validation-summary>
+    </div>
+  </div>
+  
+  <div class="form-group row required">
+    <label class="col-md-3 col-form-label" for="idNumber">
+      {{ "Select destination location" | localize }}
+    </label>
+    <div class="col-md-9">
+    <select
+          class="form-control"
+          id="destinationId"
+          name="destinationId"
+          required
+          [(ngModel)]="schedule.destinationId"
+          #destinationIdModel="ngModel"
+          #destinationIdEl>
+      <option value="0" selected disabled>Select destination</option>
+      <option *ngFor="let destination of dropdownList.locations" [value]="destination.id">
+          {{destination.name}}
+      </option>
+    </select>
+    <abp-validation-summary
+          [control]="destinationIdModel"
+          [controlEl]="destinationIdEl"
+    ></abp-validation-summary>
+    </div>
+  </div>
+
+  </div>
+  <abp-modal-footer
+    [cancelDisabled]="saving"
+    [saveDisabled]="!createRoleForm.form.valid || saving"
+    (onCancelClick)="bsModalRef.hide()"
+  ></abp-modal-footer>
+</form>

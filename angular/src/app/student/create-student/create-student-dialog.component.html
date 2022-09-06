@@ -149,6 +149,31 @@
       </div>
     </div>
 
+
+
+
+
+    <div class="row">
+      <div class="col-md-6">
+
+          <webcam 
+              [trigger]="triggerObservable" 
+              (imageCapture)="handleImage($event)"></webcam>
+            
+          <button class="btn btn-success" (click)="triggerSnapshot();">Take A Snapshot</button>
+      </div>
+      <div class="col-md-6">
+
+          <div id="results">Your captured image will appear here...</div>
+          <img src="{{ captureImage }}" height="300px">
+
+      </div>
+  </div>
+
+
+
+
+
   </div>
   <abp-modal-footer
     [cancelDisabled]="saving"

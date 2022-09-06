@@ -14,7 +14,7 @@ import { StudentComponent } from './student/student.component';
 import { StaffComponent } from './staff/staff.component';
 import { TripComponent } from './trip/trip.component';
 import { LocationComponent } from './location/location.component';
-//import { ScheduleComponent } from './schedule/schedule.component';
+import { ScheduleComponent } from './schedule/schedule.component';
 
 @NgModule({
     imports: [
@@ -35,7 +35,7 @@ import { LocationComponent } from './location/location.component';
                     { path: 'staff', component: StaffComponent },
                     { path: 'trip', component: TripComponent },
                     { path: 'location', component: LocationComponent },
-                    //{ path: 'schedule', component: ScheduleComponent },
+                    { path: 'schedule', component: ScheduleComponent },
                 ]
             }
         ])

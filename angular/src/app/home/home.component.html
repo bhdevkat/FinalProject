@@ -21,7 +21,7 @@
         <div class="col-lg-3 col-6">
           <div class="small-box bg-success">
             <div class="inner">
-              <h3>8.2k+</h3>
+              <h3>{{ statistics.userCount }}+</h3>
               <p>Users</p>
             </div>
             <div class="icon">
@@ -37,7 +37,7 @@
         <div class="col-lg-3 col-6">
           <div class="small-box bg-info">
             <div class="inner">
-              <h3>140+</h3>
+              <h3> {{ statistics.staffCount }}+</h3>
               <p>Staff</p>
             </div>
             <div class="icon">
@@ -53,7 +53,7 @@
         <div class="col-lg-3 col-6">
           <div class="small-box bg-warning">
             <div class="inner">
-              <h3>1.6k+</h3>
+              <h3> {{ statistics.studentCount }} +</h3>
               <p>Students</p>
             </div>
             <div class="icon">
@@ -69,7 +69,7 @@
         <div class="col-lg-3 col-6">
           <div class="small-box bg-primary">
             <div class="inner">
-              <h3>3.1k+</h3>
+              <h3> {{ statistics.roleCount }}+</h3>
               <p>Roles</p>
             </div>
             <div class="icon">
@@ -92,7 +92,7 @@
             <div class="info-box-content">
               <span class="info-box-text">Total Buses</span>
               <span class="info-box-number">
-                6,350+
+                {{ statistics.busCount }}+
               </span>
             </div>
           </div>
@@ -105,7 +105,7 @@
             <div class="info-box-content">
               <span class="info-box-text">Total Destinations</span>
               <span class="info-box-number">
-                170+
+                {{ statistics.destinationCount }}+
               </span>
             </div>
           </div>
@@ -119,7 +119,7 @@
             <div class="info-box-content">
               <span class="info-box-text">Total Schedules</span>
               <span class="info-box-number">
-                200+
+                {{ statistics.scheduleCount }}+
               </span>
             </div>
           </div>
@@ -132,7 +132,7 @@
             <div class="info-box-content">
               <span class="info-box-text">Total Trips</span>
               <span class="info-box-number">
-                810+
+                {{ statistics.tripCount }}+
               </span>
             </div>
           </div>
@@ -149,68 +149,28 @@
                 <thead class="bg-light">
                   <tr>
                     <th>Id</th>
-                    <th class="w-25">Depature</th>
-                    <th class="w-25">Destination</th>
-                    <th>Depature Time</th>
-                    <th>Arrival Time</th>
+                    <th class="w-25">Driver</th>
+                    <th class="w-25">Registration</th>
+                    <th>Destination</th>
+                    <th>Expected Arrival Time</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
+
+                  <tr *ngFor="
+                  let schedule of statistics.schedules
+                ">
                     <td>
-                      <a [routerLink]="['']">
-                        5452
+                      <a [routerLink]="['../schedule']">
+                        {{ schedule.id }}
                       </a>
                     </td>
-                    <td>Angular UI migration to AdminLTE 3</td>
-                    <td>
-                      <span class="badge badge-secondary mx-1">
-                        module-zero-core-template
-                      </span>
-                      <span class="badge badge-primary mx-1">
-                        feature
-                      </span>
-                    </td>
-                    <td>11 days ago</td>
-                    <td>iyilm4z</td>
+                    <td>{{ schedule.driverName }}</td>
+                    <td>{{ schedule.busReg }}</td>
+                    <td>{{ schedule.destinationName }}</td>
+                    <td>{{ schedule.expectedDepartureTime }}</td>
                   </tr>
-                  <tr>
-                    <td>
-                      <a [routerLink]="['']">
-                        5391
-                      </a>
-                    </td>
-                    <td>
-                      AbpCacheBase should lock the same object for sync and
-                      async
-                    </td>
-                    <td>
-                      <span class="badge badge-danger mx-1">
-                        bug
-                      </span>
-                      <span class="badge badge-success mx-1">
-                        pull request candidate
-                      </span>
-                    </td>
-                    <td>26 days ago</td>
-                    <td>acjh</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <a [routerLink]="['']">
-                        5390
-                      </a>
-                    </td>
-                    <td>AbpCache sliding/absolute expire time</td>
-                    <td>
-                      <span class="badge badge-warning mx-1">
-                        breaking-change
-                      </span>
-                      <span class="badge badge-info mx-1">enhancement</span>
-                    </td>
-                    <td>27 days ago</td>
-                    <td>ryancyq</td>
-                  </tr>
+
                 </tbody>
               </table>
             </div>
