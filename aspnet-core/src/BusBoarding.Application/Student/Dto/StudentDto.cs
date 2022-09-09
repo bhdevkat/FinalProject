@@ -15,6 +15,8 @@ namespace BusBoardingSystem.StudentAS.Dto
     { 
         public int TenantId { get; set; }
 
+        public int TagId { get; set; }
+
         public int PersonId { get; set; }
 
         public string StudentNumber { get; set; }

@@ -14,6 +14,8 @@ namespace BusBoardingSystem.Domain
 
         public int PersonId { get; set; }
 
+        public int TagId { get; set; }
+
         public string StudentNumber { get; set; }
     }
 }

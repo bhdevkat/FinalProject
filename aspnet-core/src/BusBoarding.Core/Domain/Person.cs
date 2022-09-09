@@ -13,8 +13,6 @@ namespace BusBoardingSystem.Domain
     {
         public int TenantId { get; set; }
 
-        public int TagId { get; set; }
-
         public string Firstname { get; set; }
 
         public string Surname { get; set; }

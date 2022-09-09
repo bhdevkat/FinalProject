@@ -7,6 +7,7 @@ using BusBoardingSystem.TagAS.Dto;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Net.Http;
 
 namespace BusBoardingSystem.TagAS
 {
@@ -15,6 +16,7 @@ namespace BusBoardingSystem.TagAS
     {
         private readonly IRepository<Tag> _tagRepository;
         private readonly IObjectMapper _objectMapper;
+        private static readonly HttpClient client = new HttpClient();
 
         public TagAppService(IRepository<Tag> repository, IObjectMapper objectMapper)
         {
@@ -27,7 +29,7 @@ namespace BusBoardingSystem.TagAS
             try
             {
                 return _objectMapper
-                    .Map<List<TagDto>>(await _tagRepository.GetAllListAsync());
+                    .Map<List<TagDto>>(await _tagRepository.GetAllListAsync(x => x.IsAssigned == false));
             }
             catch (Exception ex)
             {

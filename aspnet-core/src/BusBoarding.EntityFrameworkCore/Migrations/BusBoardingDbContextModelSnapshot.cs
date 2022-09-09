@@ -1811,9 +1811,6 @@ namespace BusBoarding.Migrations
                     b.Property<string>("Surname")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TagId")
-                        .HasColumnType("int");
-
                     b.Property<int>("TenantId")
                         .HasColumnType("int");
 
@@ -1954,6 +1951,9 @@ namespace BusBoarding.Migrations
 
                     b.Property<string>("StudentNumber")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TagId")
+                        .HasColumnType("int");
 
                     b.Property<int>("TenantId")
                         .HasColumnType("int");

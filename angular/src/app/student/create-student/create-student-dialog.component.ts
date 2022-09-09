@@ -57,7 +57,7 @@ export class CreateStudentDialogComponent extends AppComponentBase
  
   save(): void {
     this.saving = true;
-    this._studentService
+      this._studentService
       .create(this.student)
       .subscribe(
         () => {
@@ -68,7 +68,7 @@ export class CreateStudentDialogComponent extends AppComponentBase
         () => {
           this.saving = false;
         }
-      );
+      );  
   }
 
    /*------------------------------------------
@@ -87,8 +87,27 @@ export class CreateStudentDialogComponent extends AppComponentBase
   --------------------------------------------*/
   public handleImage(webcamImage: WebcamImage): void {
       this.webcamImage = webcamImage;
-      this.captureImage = webcamImage!.imageAsDataUrl;
-      console.info('received webcam image', this.captureImage);
+      this.captureImage = webcamImage!.imageAsDataUrl;      
+      
+      const myArray = this.captureImage.split(",");
+
+      const text = myArray[0];
+      this.student.person.logoImageType = myArray[0].substring(myArray[0].indexOf(":") + 1,myArray[0].indexOf(";"));
+      this.student.person.logoImage = myArray[1];
+      this.notify.info(this.l('Image captured...'));
+
+
+      var newPerson = {
+        name: 'Dougles Adams',
+        age: 42
+    };
+    
+    this._studentService.testAPI(this.student.person).subscribe(() => {
+       
+      console.info('===================', this.captureImage);
+    });
+
+   
   }
 
   /*------------------------------------------
@@ -113,3 +132,6 @@ export class CreateStudentDialogComponent extends AppComponentBase
 
 
 }
+
+
+

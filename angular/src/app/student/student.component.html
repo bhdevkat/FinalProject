@@ -108,6 +108,7 @@
                         <table class="table table-striped table-bordered" [busy]="isTableLoading">
                             <thead class="bg-light">
                             <tr>
+                                <th>{{ "Student Photo" | localize }}</th>
                                 <th>{{ "Student Number" | localize }}</th>
                                 <th>{{ "Firstname" | localize }}</th>
                                 <th>{{ "Surname" | localize }}</th>
@@ -129,6 +130,16 @@
                         }
                 "
                             >
+                                <td class="student-logo-col">
+                                    <div class="student-logo">
+                                        <ng-container *ngIf="student.person.logoImageType != null; else elseTemplate">
+                                            <img [src]="'data:' + student.person.logoImageType + ';base64,' + student.person.logoImage"/>
+                                        </ng-container>
+                                        <ng-template #elseTemplate>
+                                            <img src="../../assets/img/CompanyLogoPlaceholder.png" class="img-responsive">
+                                        </ng-template>
+                                    </div>
+                                </td>
                                 <td>{{ student.studentNumber }}</td>
                                 <td>{{ student.person.firstname }}</td>
                                 <td>{{ student.person.surname }}</td>

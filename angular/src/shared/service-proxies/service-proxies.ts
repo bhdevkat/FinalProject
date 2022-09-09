@@ -2806,6 +2806,62 @@ export class StudentServiceProxy {
         }
         return _observableOf<void>(<any>null);
     }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    testAPI(body: CreatePersonDto | undefined): Observable<number> {
+        let url_ = this.baseUrl + "/api/services/app/Student/TestAPI";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processTestAPI(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTestAPI(<any>response_);
+                } catch (e) {
+                    return <Observable<number>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<number>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processTestAPI(response: HttpResponseBase): Observable<number> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<number>(<any>null);
+    }
 }
 
 @Injectable()
@@ -5068,7 +5124,6 @@ export interface ICreateLocationDto {
 export class CreatePersonDto implements ICreatePersonDto {
     id: number;
     tenantId: number;
-    tagId: number;
     firstname: string | undefined;
     surname: string | undefined;
     dateOfBirth: string | undefined;
@@ -5089,7 +5144,6 @@ export class CreatePersonDto implements ICreatePersonDto {
         if (_data) {
             this.id = _data["id"];
             this.tenantId = _data["tenantId"];
-            this.tagId = _data["tagId"];
             this.firstname = _data["firstname"];
             this.surname = _data["surname"];
             this.dateOfBirth = _data["dateOfBirth"];
@@ -5110,7 +5164,6 @@ export class CreatePersonDto implements ICreatePersonDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["tenantId"] = this.tenantId;
-        data["tagId"] = this.tagId;
         data["firstname"] = this.firstname;
         data["surname"] = this.surname;
         data["dateOfBirth"] = this.dateOfBirth;
@@ -5131,7 +5184,6 @@ export class CreatePersonDto implements ICreatePersonDto {
 export interface ICreatePersonDto {
     id: number;
     tenantId: number;
-    tagId: number;
     firstname: string | undefined;
     surname: string | undefined;
     dateOfBirth: string | undefined;
@@ -5340,6 +5392,7 @@ export interface ICreateStaffDto {
 export class CreateStudentDto implements ICreateStudentDto {
     id: number;
     tenantId: number;
+    tagId: number;
     personId: number;
     studentNumber: string | undefined;
     person: CreatePersonDto;
@@ -5357,6 +5410,7 @@ export class CreateStudentDto implements ICreateStudentDto {
         if (_data) {
             this.id = _data["id"];
             this.tenantId = _data["tenantId"];
+            this.tagId = _data["tagId"];
             this.personId = _data["personId"];
             this.studentNumber = _data["studentNumber"];
             this.person = _data["person"] ? CreatePersonDto.fromJS(_data["person"]) : <any>undefined;
@@ -5374,6 +5428,7 @@ export class CreateStudentDto implements ICreateStudentDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["tenantId"] = this.tenantId;
+        data["tagId"] = this.tagId;
         data["personId"] = this.personId;
         data["studentNumber"] = this.studentNumber;
         data["person"] = this.person ? this.person.toJSON() : <any>undefined;
@@ -5391,6 +5446,7 @@ export class CreateStudentDto implements ICreateStudentDto {
 export interface ICreateStudentDto {
     id: number;
     tenantId: number;
+    tagId: number;
     personId: number;
     studentNumber: string | undefined;
     person: CreatePersonDto;
@@ -6535,7 +6591,6 @@ export class Person implements IPerson {
     deleterUserId: number | undefined;
     deletionTime: moment.Moment | undefined;
     tenantId: number;
-    tagId: number;
     firstname: string | undefined;
     surname: string | undefined;
     dateOfBirth: moment.Moment;
@@ -6563,7 +6618,6 @@ export class Person implements IPerson {
             this.deleterUserId = _data["deleterUserId"];
             this.deletionTime = _data["deletionTime"] ? moment(_data["deletionTime"].toString()) : <any>undefined;
             this.tenantId = _data["tenantId"];
-            this.tagId = _data["tagId"];
             this.firstname = _data["firstname"];
             this.surname = _data["surname"];
             this.dateOfBirth = _data["dateOfBirth"] ? moment(_data["dateOfBirth"].toString()) : <any>undefined;
@@ -6591,7 +6645,6 @@ export class Person implements IPerson {
         data["deleterUserId"] = this.deleterUserId;
         data["deletionTime"] = this.deletionTime ? this.deletionTime.toISOString() : <any>undefined;
         data["tenantId"] = this.tenantId;
-        data["tagId"] = this.tagId;
         data["firstname"] = this.firstname;
         data["surname"] = this.surname;
         data["dateOfBirth"] = this.dateOfBirth ? this.dateOfBirth.toISOString() : <any>undefined;
@@ -6619,7 +6672,6 @@ export interface IPerson {
     deleterUserId: number | undefined;
     deletionTime: moment.Moment | undefined;
     tenantId: number;
-    tagId: number;
     firstname: string | undefined;
     surname: string | undefined;
     dateOfBirth: moment.Moment;
@@ -6635,6 +6687,8 @@ export class PersonDto implements IPersonDto {
     surname: string | undefined;
     dateOfBirth: string | undefined;
     idNumber: string | undefined;
+    logoImageType: string | undefined;
+    logoImage: string | undefined;
 
     constructor(data?: IPersonDto) {
         if (data) {
@@ -6653,6 +6707,8 @@ export class PersonDto implements IPersonDto {
             this.surname = _data["surname"];
             this.dateOfBirth = _data["dateOfBirth"];
             this.idNumber = _data["idNumber"];
+            this.logoImageType = _data["logoImageType"];
+            this.logoImage = _data["logoImage"];
         }
     }
 
@@ -6671,6 +6727,8 @@ export class PersonDto implements IPersonDto {
         data["surname"] = this.surname;
         data["dateOfBirth"] = this.dateOfBirth;
         data["idNumber"] = this.idNumber;
+        data["logoImageType"] = this.logoImageType;
+        data["logoImage"] = this.logoImage;
         return data; 
     }
 
@@ -6689,6 +6747,8 @@ export interface IPersonDto {
     surname: string | undefined;
     dateOfBirth: string | undefined;
     idNumber: string | undefined;
+    logoImageType: string | undefined;
+    logoImage: string | undefined;
 }
 
 export class RegisterInput implements IRegisterInput {
@@ -7568,6 +7628,7 @@ export class Student implements IStudent {
     deletionTime: moment.Moment | undefined;
     tenantId: number;
     personId: number;
+    tagId: number;
     studentNumber: string | undefined;
 
     constructor(data?: IStudent) {
@@ -7591,6 +7652,7 @@ export class Student implements IStudent {
             this.deletionTime = _data["deletionTime"] ? moment(_data["deletionTime"].toString()) : <any>undefined;
             this.tenantId = _data["tenantId"];
             this.personId = _data["personId"];
+            this.tagId = _data["tagId"];
             this.studentNumber = _data["studentNumber"];
         }
     }
@@ -7614,6 +7676,7 @@ export class Student implements IStudent {
         data["deletionTime"] = this.deletionTime ? this.deletionTime.toISOString() : <any>undefined;
         data["tenantId"] = this.tenantId;
         data["personId"] = this.personId;
+        data["tagId"] = this.tagId;
         data["studentNumber"] = this.studentNumber;
         return data; 
     }
@@ -7637,12 +7700,14 @@ export interface IStudent {
     deletionTime: moment.Moment | undefined;
     tenantId: number;
     personId: number;
+    tagId: number;
     studentNumber: string | undefined;
 }
 
 export class StudentDto implements IStudentDto {
     id: number;
     tenantId: number;
+    tagId: number;
     personId: number;
     studentNumber: string | undefined;
     person: PersonDto;
@@ -7660,6 +7725,7 @@ export class StudentDto implements IStudentDto {
         if (_data) {
             this.id = _data["id"];
             this.tenantId = _data["tenantId"];
+            this.tagId = _data["tagId"];
             this.personId = _data["personId"];
             this.studentNumber = _data["studentNumber"];
             this.person = _data["person"] ? PersonDto.fromJS(_data["person"]) : <any>undefined;
@@ -7677,6 +7743,7 @@ export class StudentDto implements IStudentDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["tenantId"] = this.tenantId;
+        data["tagId"] = this.tagId;
         data["personId"] = this.personId;
         data["studentNumber"] = this.studentNumber;
         data["person"] = this.person ? this.person.toJSON() : <any>undefined;
@@ -7694,6 +7761,7 @@ export class StudentDto implements IStudentDto {
 export interface IStudentDto {
     id: number;
     tenantId: number;
+    tagId: number;
     personId: number;
     studentNumber: string | undefined;
     person: PersonDto;
