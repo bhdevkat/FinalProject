@@ -4,6 +4,7 @@ using BusBoarding.Authorization.Roles;
 using BusBoarding.Authorization.Users;
 using BusBoarding.MultiTenancy;
 using BusBoardingSystem.Domain;
+using BusBoarding.Domain;
 
 namespace BusBoarding.EntityFrameworkCore
 {
@@ -17,7 +18,8 @@ namespace BusBoarding.EntityFrameworkCore
         public DbSet<Schedule> Schedules { get; set; }
         public DbSet<Staff> Staff { get; set; }
         public DbSet<Student> Students { get; set; }
-        public DbSet<Trip> Trips { get; set; }
+        public DbSet<Trip> Trips { get; set; }        
+        public DbSet<TapActivity> TapActivities { get; set; }
 
         public DbSet<Tag> Tags { get; set; }
         public BusBoardingDbContext(DbContextOptions<BusBoardingDbContext> options)
