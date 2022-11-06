@@ -82,6 +82,12 @@
                         <i class="fas fa-trash"></i>
                         {{ "Delete" | localize }}
                       </button>
+                      <button type="button"
+                      [routerLink]="['/app/scheduleDetails', schedule.id]"
+                        class="btn btn-sm bg-primary mx-2">
+                        <i class="fas fa-eye"></i>
+                        {{ "View" | localize }}
+                      </button>
                     </td>
                   </tr>
                 </tbody>

@@ -13,6 +13,7 @@ import {
 } from '@shared/service-proxies/service-proxies';
 import { CreateScheduleDialogComponent } from './create-schedule/create-schedule-dialog.component';
 import { EditScheduleDialogComponent } from './edit-schedule/edit-schedule-dialog.component';
+import { Router } from '@angular/router';
 
 class PagedScheduleesRequestDto extends PagedRequestDto {
   keyword: string;
@@ -31,7 +32,8 @@ export class ScheduleComponent extends PagedListingComponentBase<ScheduleDto> {
     constructor(
       injector: Injector,
       private _schedulesService: ScheduleServiceProxy,
-      private _modalService: BsModalService
+      private _modalService: BsModalService,
+      private _router: Router,
     ) {
       super(injector);
     }
@@ -74,6 +76,11 @@ export class ScheduleComponent extends PagedListingComponentBase<ScheduleDto> {
           }
         }
       );
+    }
+
+    viewDetails(schedule: ScheduleDto): void {
+      console.log('Clicked!')
+      this._router.navigate(['/scheduleDetails']);
     }
   
     createSchedule(): void {

@@ -69,6 +69,7 @@ import { CreateScheduleDialogComponent } from './schedule/create-schedule/create
 import { EditScheduleDialogComponent } from './schedule/edit-schedule/edit-schedule-dialog.component';
 
 import { WebcamModule } from 'ngx-webcam';
+import { ScheduleDetailsComponent } from './schedule/details-schedule/schedule-details/schedule-details.component';
 
 @NgModule({
   declarations: [
@@ -127,10 +128,11 @@ import { WebcamModule } from 'ngx-webcam';
     LocationComponent,
     CreateLocationDialogComponent,
     EditLocationDialogComponent,
-    //Location
+    //Schedule
     ScheduleComponent,
     CreateScheduleDialogComponent,
     EditScheduleDialogComponent,
+    ScheduleDetailsComponent,
   ],
   imports: [
     CommonModule,

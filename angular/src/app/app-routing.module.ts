@@ -15,6 +15,7 @@ import { StaffComponent } from './staff/staff.component';
 import { TripComponent } from './trip/trip.component';
 import { LocationComponent } from './location/location.component';
 import { ScheduleComponent } from './schedule/schedule.component';
+import { ScheduleDetailsComponent } from './schedule/details-schedule/schedule-details/schedule-details.component';
 
 @NgModule({
     imports: [
@@ -36,6 +37,7 @@ import { ScheduleComponent } from './schedule/schedule.component';
                     { path: 'trip', component: TripComponent },
                     { path: 'location', component: LocationComponent },
                     { path: 'schedule', component: ScheduleComponent },
+                    { path: 'scheduleDetails/:id', component: ScheduleDetailsComponent },
                 ]
             }
         ])

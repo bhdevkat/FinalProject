@@ -7,7 +7,7 @@ using BusBoardingSystem.Domain;
 
 namespace BusBoardingSystem.BoardingAS
 {
-    [AbpAuthorize(PermissionNames.Pages_Boardings)]
+    //[AbpAuthorize(PermissionNames.Pages_Boardings)]
     public class BoardingAppService : AsyncCrudAppService<Boarding, BoardingDto, int, PagedBoardingResultRequestDto, CreateBoardingDto, BoardingDto>, IBoardingAppService
     {            
         public BoardingAppService(IRepository<Boarding, int> repository) : base(repository)
